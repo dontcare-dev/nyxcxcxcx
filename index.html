@@ -53,6 +53,7 @@
       .unit-toggle { background-color: #f7f7f8 !important; }
       .unit-btn.active { background-color: #ffffff !important; color: #0f0f12 !important; }
       .spotify-widget { background-color: #ffffff !important; border-color: #ebebf0 !important; }
+      .github-widget { background-color: #ffffff !important; border-color: #ebebf0 !important; }
     }
 
     a { color: inherit; text-decoration: none; }
@@ -82,7 +83,7 @@
     .cursor-gif.hovering { width: 54px; height: 54px; }
 
     @media (pointer: fine) {
-      body, a, button, .chip, .project, .social, .avatar-wrap { cursor: none !important; }
+      body, a, button, .chip, .project, .social, .avatar-wrap, .github-widget { cursor: none !important; }
     }
     @media (max-width: 900px) {
       .cursor-gif { display: none !important; }
@@ -301,24 +302,36 @@
     .marquee-item img { width: 32px; height: 32px; }
     .marquee-item .sep { color: var(--accent) !important; margin-left: 40px; }
 
-    .stats-grid {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      gap: 32px;
-      flex-wrap: wrap;
-      margin-bottom: 64px;
-    }
-    .stats-grid img {
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+    .github-widget {
+      background: #ffffff !important;
+      border: 1px solid var(--line) !important;
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.04);
       animation: float 8s ease-in-out infinite;
-      max-width: 100%;
-      height: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      width: 100%;
     }
-    .stats-grid img:nth-child(1) { animation-delay: 0s; }
-    .stats-grid img:nth-child(2) { animation-delay: 1s; }
+    .gh-header { display: flex; align-items: center; gap: 16px; }
+    .gh-avatar { width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--line); }
+    .gh-info { display: flex; flex-direction: column; gap: 2px; }
+    .gh-name { font-size: 1.4rem; font-weight: 650; color: var(--ink) !important; }
+    .gh-link { font-size: 0.9rem; color: var(--muted) !important; transition: color 0.2s; }
+    .gh-link:hover { color: var(--accent) !important; }
+    .gh-stats { display: flex; gap: 32px; flex-wrap: wrap; }
+    .gh-stat { display: flex; flex-direction: column; }
+    .gh-stat-value { font-size: 1.8rem; font-weight: 600; color: var(--ink) !important; line-height: 1.1; }
+    .gh-stat-label { font-size: 0.85rem; color: var(--muted) !important; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+    .gh-langs { display: flex; flex-wrap: wrap; gap: 12px; }
+    .gh-lang-chip {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 16px; border-radius: 999px;
+      border: 1px solid var(--line); background: #fafafb !important;
+      font-size: 0.9rem; font-weight: 500; color: var(--ink) !important;
+    }
+    .gh-lang-dot { width: 8px; height: 8px; border-radius: 50%; }
 
     .projects-grid {
       display: grid; grid-template-columns: repeat(2, minmax(0,1fr));
@@ -446,7 +459,6 @@
       .hero-grid { grid-template-columns: 1fr; gap: 32px; }
       .split { grid-template-columns: 1fr; gap: 32px; }
       .split .media { order: -1; }
-      .stats-grid { flex-direction: column; }
       .spotify-widget { bottom: 16px; right: 16px; padding: 8px 12px; gap: 12px; }
       .spotify-art { width: 36px; height: 36px; }
       .spotify-info { max-width: 100px; }
@@ -489,6 +501,10 @@
       .social svg { width: 20px; height: 20px; }
       .marquee-item { font-size: 1rem; gap: 8px; }
       .marquee-item img { width: 24px; height: 24px; }
+      
+      .github-widget { padding: 24px 16px; }
+      .gh-stats { gap: 16px; }
+      .gh-stat-value { font-size: 1.4rem; }
     }
     
     @media (prefers-reduced-motion: reduce) {
@@ -647,10 +663,32 @@
   </div>
 
   <section id="github-stats" class="wrap">
-    <h2>GitHub Stats</h2>
-    <div class="stats-grid reveal">
-      <img src="https://github-readme-stats.vercel.app/api?username=dontcare-dev&show_icons=true&theme=transparent&hide_border=true&title_color=0f0f12&text_color=6b6b76&icon_color=e11d48" alt="GitHub Stats" />
-      <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=dontcare-dev&layout=compact&theme=transparent&hide_border=true&title_color=0f0f12&text_color=6b6b76" alt="Top Languages" />
+    <h2>GitHub Activity</h2>
+    <div class="github-widget reveal">
+      <div class="gh-header">
+        <img src="https://github.com/dontcare-dev.png" alt="dontcare-dev" class="gh-avatar">
+        <div class="gh-info">
+          <div class="gh-name">dontcare-dev</div>
+          <a href="https://github.com/dontcare-dev" class="gh-link" target="_blank" rel="noopener">View Profile ↗</a>
+        </div>
+      </div>
+      <div class="gh-stats">
+        <div class="gh-stat">
+          <span class="gh-stat-value" id="gh-repos">--</span>
+          <span class="gh-stat-label">Public Repos</span>
+        </div>
+        <div class="gh-stat">
+          <span class="gh-stat-value" id="gh-followers">--</span>
+          <span class="gh-stat-label">Followers</span>
+        </div>
+        <div class="gh-stat">
+          <span class="gh-stat-value" id="gh-following">--</span>
+          <span class="gh-stat-label">Following</span>
+        </div>
+      </div>
+      <div class="gh-langs" id="gh-langs">
+        <div class="gh-lang-chip"><span class="gh-lang-dot" style="background:#6b6b76;"></span>Loading...</div>
+      </div>
     </div>
   </section>
 
@@ -791,7 +829,7 @@
     cursorGif.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
   });
 
-  document.querySelectorAll("a, button, .chip, .project, .social, .avatar-wrap").forEach(el => {
+  document.querySelectorAll("a, button, .chip, .project, .social, .avatar-wrap, .github-widget").forEach(el => {
     el.addEventListener("mouseenter", () => cursorGif.classList.add("hovering"));
     el.addEventListener("mouseleave", () => cursorGif.classList.remove("hovering"));
   });
@@ -1086,6 +1124,57 @@
   updateClock();
   setInterval(updateClock, 1000);
   fetchWeather();
+
+  async function fetchGitHubStats() {
+    try {
+      const userRes = await fetch('https://api.github.com/users/dontcare-dev');
+      const userData = await userRes.json();
+      document.getElementById('gh-repos').textContent = userData.public_repos;
+      document.getElementById('gh-followers').textContent = userData.followers;
+      document.getElementById('gh-following').textContent = userData.following;
+
+      const reposRes = await fetch('https://api.github.com/users/dontcare-dev/repos?per_page=100');
+      const reposData = await reposRes.json();
+      
+      const langs = {};
+      reposData.forEach(repo => {
+        if (repo.language) {
+          langs[repo.language] = (langs[repo.language] || 0) + 1;
+        }
+      });
+
+      const sortedLangs = Object.entries(langs).sort((a, b) => b[1] - a[1]).slice(0, 6);
+      const langContainer = document.getElementById('gh-langs');
+      langContainer.innerHTML = '';
+      
+      const colors = {
+        Python: '#3776AB', JavaScript: '#F7DF1E', Go: '#00ADD8', React: '#61DAFB', Kotlin: '#7F52FF', HTML: '#E34F26', CSS: '#1572B6', TypeScript: '#3178C6'
+      };
+
+      if (sortedLangs.length === 0) {
+        langContainer.innerHTML = '<div class="gh-lang-chip"><span class="gh-lang-dot" style="background:#6b6b76;"></span>None found</div>';
+      } else {
+        sortedLangs.forEach(([lang, count]) => {
+          const chip = document.createElement('div');
+          chip.className = 'gh-lang-chip';
+          const dot = document.createElement('span');
+          dot.className = 'gh-lang-dot';
+          dot.style.backgroundColor = colors[lang] || '#6b6b76';
+          const text = document.createElement('span');
+          text.textContent = `${lang} (${count})`;
+          chip.appendChild(dot);
+          chip.appendChild(text);
+          langContainer.appendChild(chip);
+        });
+      }
+    } catch (e) {
+      console.error('GitHub stats failed', e);
+      document.getElementById('gh-repos').textContent = '?';
+      document.getElementById('gh-followers').textContent = '?';
+      document.getElementById('gh-langs').innerHTML = '<div class="gh-lang-chip">Failed to load</div>';
+    }
+  }
+  fetchGitHubStats();
 
 })();
 </script>
