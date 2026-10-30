@@ -102,7 +102,13 @@
     .nav { display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 16px; }
     .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -0.02em; transition: transform .3s; }
     .brand:hover { transform: scale(1.05) rotate(-2deg); }
-    .brand .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); animation: pulse-dot 2s infinite; }
+    .brand-gif { 
+      width: 28px; 
+      height: 28px; 
+      border-radius: 50%; 
+      object-fit: cover; 
+      border: 1px solid var(--line);
+    }
     .nav-links { display: flex; align-items: center; gap: 4px; }
     .nav-links a { 
       padding: 8px 14px; border-radius: 999px; font-size: 14px; color: var(--muted); 
@@ -328,7 +334,7 @@
 <header class="site-header">
   <div class="wrap nav">
     <a href="#" class="brand" aria-label="nyx.">
-      <span class="dot"></span>
+      <img src="https://i.ibb.co/HDrh4BVk/d2e3f3be4087072eb36f6678c83db41a-1.gif" class="brand-gif" alt="" />
       <span id="brand-name">nyx.</span>
     </a>
     <nav class="nav-links" aria-label="Primary">
