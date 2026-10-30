@@ -201,6 +201,67 @@
     .user-activity strong { color: var(--ink); font-weight: 500; }
     .user-activity .empty { opacity: 0.6; }
 
+    .weather-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin: 20px 0 40px;
+      position: relative;
+      z-index: 2;
+    }
+    .weather-widget {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 28px 36px;
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      color: var(--ink);
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+      width: 100%;
+      max-width: 850px;
+      animation: float 10s ease-in-out infinite;
+    }
+    .weather-col {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .weather-col.time-col { flex-shrink: 0; }
+    .weather-col.location-col { 
+      flex: 1; align-items: center; text-align: center;
+      border-left: 1px solid var(--line); border-right: 1px solid var(--line);
+      padding: 0 20px; gap: 12px;
+    }
+    .weather-col.weather-info-col {
+      flex-shrink: 0; align-items: flex-end; text-align: right; gap: 4px;
+    }
+
+    .time-text { font-size: 3rem; font-weight: 600; line-height: 1; letter-spacing: -2px; color: var(--ink); }
+    .ampm-text { font-size: 1.8rem; font-weight: 500; margin-left: 4px; color: var(--ink); }
+    .date-text { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 6px; font-weight: 500; }
+
+    .location-name { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; font-weight: 600; }
+    
+    .unit-toggle {
+      display: flex; background: #f7f7f8; border-radius: 30px; padding: 4px; border: 1px solid var(--line);
+    }
+    .unit-btn {
+      background: transparent; border: none; color: var(--muted); padding: 6px 18px; border-radius: 30px;
+      font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+      font-family: inherit;
+    }
+    .unit-btn.active { background: #ffffff; color: var(--ink); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+
+    .weather-icon-large { width: 50px; height: 50px; margin-bottom: 4px; color: var(--ink); }
+    .temp-text { font-size: 2.8rem; font-weight: 500; line-height: 1; letter-spacing: -1px; color: var(--ink); }
+    .temp-unit { font-size: 1.4rem; vertical-align: top; color: var(--muted); }
+    .condition-text { font-size: 1rem; color: var(--muted); font-weight: 500; text-transform: capitalize; }
+    .feels-like-text { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+    .feels-like-text span { color: var(--ink); }
+
     .marquee-section {
       padding: 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
       background: rgba(255,255,255,0.5); overflow: hidden; display: flex; align-items: center;
@@ -309,8 +370,10 @@
       .split { grid-template-columns: 1fr; gap: 40px; }
       .split .media { order: -1; }
       .scroll-indicator { display: none; }
-      .weather-widget { flex-direction: column; height: auto; padding: 20px; }
-      .weather-section { border-left: none; border-top: 1px solid #3d3d3d; padding-top: 20px; margin-top: 20px; }
+      .weather-widget { flex-direction: column; height: auto; padding: 24px; gap: 24px; border-radius: 20px; }
+      .weather-col.location-col { border-left: none; border-right: none; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 16px 0; width: 100%; }
+      .weather-col.weather-info-col { align-items: center; text-align: center; width: 100%; }
+      .time-text { font-size: 2.8rem; }
     }
     @media (max-width: 620px) {
       section { padding: 48px 0; }
@@ -323,66 +386,6 @@
       .reveal { opacity: 1; transform: none; }
       html { scroll-behavior: auto; }
     }
-
-    /* WEATHER WIDGET STYLES */
-    .weather-container {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      margin: 20px 0 40px;
-      position: relative;
-      z-index: 2;
-    }
-    .weather-widget {
-      background: #111111;
-      border-radius: 16px;
-      padding: 28px 36px;
-      display: flex;
-      align-items: center;
-      gap: 32px;
-      color: #f0f0f0;
-      font-family: ui-monospace, SFMono-Regular, monospace;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-      width: 100%;
-      max-width: 850px;
-      animation: float 10s ease-in-out infinite;
-    }
-    .weather-col {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-    .weather-col.time-col { flex-shrink: 0; }
-    .weather-col.location-col { 
-      flex: 1; align-items: center; text-align: center;
-      border-left: 1px solid #333; border-right: 1px solid #333;
-      padding: 0 20px; gap: 12px;
-    }
-    .weather-col.weather-info-col {
-      flex-shrink: 0; align-items: flex-end; text-align: right; gap: 4px;
-    }
-
-    .time-text { font-size: 3rem; font-weight: 600; line-height: 1; letter-spacing: -2px; }
-    .ampm-text { font-size: 1.8rem; font-weight: 500; margin-left: 4px; }
-    .date-text { font-size: 0.8rem; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-top: 6px; font-weight: 500; }
-
-    .location-name { font-size: 0.8rem; color: #888; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; }
-    .unit-toggle {
-      display: flex; background: #222; border-radius: 30px; padding: 4px; border: 1px solid #333;
-    }
-    .unit-btn {
-      background: transparent; border: none; color: #888; padding: 6px 18px; border-radius: 30px;
-      font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
-      font-family: inherit;
-    }
-    .unit-btn.active { background: #444; color: #fff; }
-
-    .weather-icon-large { width: 50px; height: 50px; margin-bottom: 4px; }
-    .temp-text { font-size: 2.8rem; font-weight: 500; line-height: 1; letter-spacing: -1px; }
-    .temp-unit { font-size: 1.4rem; vertical-align: top; }
-    .condition-text { font-size: 1rem; color: #ccc; font-weight: 500; text-transform: capitalize; }
-    .feels-like-text { font-size: 0.8rem; color: #888; margin-top: 2px; }
-    .feels-like-text span { color: #ccc; }
   </style>
 </head>
 <body>
@@ -452,7 +455,6 @@
     </div>
   </section>
 
-  <!-- WEATHER WIDGET -->
   <div class="weather-container wrap">
     <div class="weather-widget">
       <div class="weather-col time-col">
@@ -803,7 +805,6 @@
   }
   connect();
 
-  /* WEATHER WIDGET SCRIPT */
   let currentUnit = 'c';
   let weatherData = null;
 
@@ -834,13 +835,11 @@
     document.getElementById('clock-time').textContent = timeVal.replace(/:$/, '');
     document.getElementById('clock-ampm').textContent = ampm;
     
-    // Clean up date format: "Thu, Oct 29"
     const dateStr = new Intl.DateTimeFormat('en-IN', { timeZone: 'Asia/Kolkata', weekday: 'short', month: 'short', day: 'numeric' }).format(now);
     document.getElementById('clock-date').textContent = dateStr.toUpperCase();
   }
 
   function getWeatherIcon(code, isDay) {
-    // Basic SVG paths for weather icons
     if (code === 0) {
       return isDay 
         ? '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>'
@@ -876,9 +875,6 @@
     
     document.getElementById('weather-temp').textContent = Math.round(temp);
     document.getElementById('weather-feels').textContent = Math.round(feels) + unitSymbol;
-    
-    // Optional: You can hook up the unit symbol in the main temp display if needed, 
-    // currently the design uses just a degree symbol.
   }
 
   window.setUnit = function(unit) {
@@ -907,7 +903,6 @@
         const weatherIconSvg = document.getElementById('weather-icon');
         weatherIconSvg.innerHTML = getWeatherIcon(weatherData.code, weatherData.isDay);
 
-        // Update text condition
         const codes = {
           0: 'Clear sky', 1: 'Mainly clear', 2: 'Partly cloudy', 3: 'Overcast',
           45: 'Fog', 48: 'Depositing rime fog', 51: 'Light drizzle', 53: 'Moderate drizzle', 55: 'Dense drizzle',
@@ -929,9 +924,8 @@
     }
   }
 
-  // Initialize Widget
   updateClock();
-  setInterval(updateClock, 1000); // Update time every second
+  setInterval(updateClock, 1000);
   fetchWeather();
 
 })();
