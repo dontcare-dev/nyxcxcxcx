@@ -102,13 +102,16 @@
     .nav { display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 16px; }
     .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -0.02em; transition: transform .3s; }
     .brand:hover { transform: scale(1.05) rotate(-2deg); }
-    .brand-gif { 
-      width: 28px; 
-      height: 28px; 
-      border-radius: 50%; 
+    .brand .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); animation: pulse-dot 2s infinite; }
+    
+    .nav-center-gif { 
+      height: 44px; 
+      border-radius: 12px; 
       object-fit: cover; 
-      border: 1px solid var(--line);
+      animation: float 5s ease-in-out infinite; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
+
     .nav-links { display: flex; align-items: center; gap: 4px; }
     .nav-links a { 
       padding: 8px 14px; border-radius: 999px; font-size: 14px; color: var(--muted); 
@@ -311,6 +314,7 @@
       section { padding: 48px 0; }
       .projects-grid { grid-template-columns: 1fr; gap: 48px; }
       .nav-links { display: none; }
+      .nav-center-gif { display: none; }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -334,9 +338,12 @@
 <header class="site-header">
   <div class="wrap nav">
     <a href="#" class="brand" aria-label="nyx.">
-      <img src="https://i.ibb.co/HDrh4BVk/d2e3f3be4087072eb36f6678c83db41a-1.gif" class="brand-gif" alt="" />
+      <span class="dot"></span>
       <span id="brand-name">nyx.</span>
     </a>
+    
+    <img src="https://i.ibb.co/HDrh4BVk/d2e3f3be4087072eb36f6678c83db41a-1.gif" class="nav-center-gif" alt="" />
+
     <nav class="nav-links" aria-label="Primary">
       <a href="#stack">Stack</a>
       <a href="#work">Work</a>
