@@ -138,77 +138,105 @@
     }
     .nav-links a:hover { background: #fafafb; color: var(--ink); transform: translateY(-2px); }
 
-    /* ADVANCED MUSIC PLAYER */
     #yt-player { display: none; }
+
     .music-player {
-      position: relative;
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 4px 12px 4px 4px;
+      gap: 12px;
+      padding: 6px 6px 6px 12px;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: #fafafb;
+      background: #ffffff;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
       margin-left: auto;
-      margin-right: 12px;
-      transition: border-color .2s, background .2s;
+      margin-right: 16px;
+      transition: all .3s ease;
+      min-width: 320px;
     }
-    .music-player:hover { border-color: #dcdce4; background: #ffffff; }
+    .music-player:hover { border-color: #dcdce4; box-shadow: 0 6px 24px rgba(0,0,0,0.08); }
+    
+    .music-art {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      background: #f0f0f0;
+      animation: spin 10s linear infinite;
+      animation-play-state: paused;
+    }
+    .music-player.playing .music-art { animation-play-state: running; }
+    
+    .music-info { display: flex; flex-direction: column; justify-content: center; min-width: 0; flex: 1; gap: 2px; }
+    .music-title { font-size: 14px; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; }
+    .music-artist { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; }
+
+    .visualizer { display: flex; align-items: center; gap: 2px; height: 20px; margin-right: 8px; }
+    .v-bar { width: 3px; background: #4f46e5; border-radius: 2px; height: 4px; transition: height .2s; opacity: 0.5; }
+    .music-player.playing .v-bar { opacity: 1; animation: bounceBar 0.8s infinite alternate ease-in-out; }
+    
+    .music-player.playing .v-bar:nth-child(1) { animation-delay: 0.1s; }
+    .music-player.playing .v-bar:nth-child(2) { animation-delay: 0.3s; animation-duration: 0.6s; }
+    .music-player.playing .v-bar:nth-child(3) { animation-delay: 0.2s; animation-duration: 0.7s; }
+    .music-player.playing .v-bar:nth-child(4) { animation-delay: 0.4s; animation-duration: 0.9s; }
+    .music-player.playing .v-bar:nth-child(5) { animation-delay: 0.1s; animation-duration: 0.5s; }
+    .music-player.playing .v-bar:nth-child(6) { animation-delay: 0.3s; animation-duration: 0.8s; }
+    .music-player.playing .v-bar:nth-child(7) { animation-delay: 0.2s; animation-duration: 0.6s; }
+    .music-player.playing .v-bar:nth-child(8) { animation-delay: 0.4s; animation-duration: 0.7s; }
+    .music-player.playing .v-bar:nth-child(9) { animation-delay: 0s; animation-duration: 0.9s; }
+    .music-player.playing .v-bar:nth-child(10) { animation-delay: 0.2s; animation-duration: 0.5s; }
+    .music-player.playing .v-bar:nth-child(11) { animation-delay: 0.1s; animation-duration: 0.8s; }
+    .music-player.playing .v-bar:nth-child(12) { animation-delay: 0.3s; animation-duration: 0.6s; }
+
+    @keyframes bounceBar {
+      0% { height: 4px; }
+      100% { height: 20px; }
+    }
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
     .music-btn {
       display: grid; place-items: center;
-      width: 28px; height: 28px;
+      width: 44px; height: 44px;
       border: 0; border-radius: 50%;
-      background: #ffffff; color: var(--ink);
-      cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      transition: background .2s, color .2s, transform .1s;
+      background: var(--ink); color: #ffffff;
+      cursor: pointer; flex-shrink: 0;
+      transition: transform .2s, background .2s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
-    .music-btn:hover { background: var(--ink); color: #ffffff; }
+    .music-btn:hover { transform: scale(1.05); background: #000; }
     .music-btn:active { transform: scale(0.95); }
-    .music-btn svg { width: 12px; height: 12px; margin-left: 1px; }
+    .music-btn svg { width: 18px; height: 18px; margin-left: 2px; }
     .music-btn svg.pause-icon { margin-left: 0; }
-    
-    .music-info { display: flex; flex-direction: column; justify-content: center; min-width: 0; max-width: 100px; gap: 1px; }
-    .music-title { font-family: ui-monospace, SFMono-Regular, monospace; font-size: 9.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; font-weight: 500; }
-    
-    .visualizer { display: flex; align-items: flex-end; gap: 1px; height: 12px; overflow: hidden; opacity: 0.4; transition: opacity .3s; }
-    .visualizer.is-playing { opacity: 1; }
-    .v-char { font-family: ui-monospace, SFMono-Regular, monospace; font-size: 10px; color: var(--ink); line-height: 1; display: inline-block; transform-origin: bottom; }
-    
-    .is-playing .v-char { animation: bounceVis 0.4s infinite alternate; }
-    .is-playing .v-char:nth-child(1) { animation-delay: 0s; animation-duration: .35s; }
-    .is-playing .v-char:nth-child(2) { animation-delay: .1s; animation-duration: .45s; }
-    .is-playing .v-char:nth-child(3) { animation-delay: .2s; animation-duration: .55s; }
-    .is-playing .v-char:nth-child(4) { animation-delay: .05s; animation-duration: .4s; }
-    .is-playing .v-char:nth-child(5) { animation-delay: .15s; animation-duration: .5s; }
-    .is-playing .v-char:nth-child(6) { animation-delay: .25s; animation-duration: .35s; }
-    .is-playing .v-char:nth-child(7) { animation-delay: .12s; animation-duration: .45s; }
-    .is-playing .v-char:nth-child(8) { animation-delay: .22s; animation-duration: .55s; }
-    .is-playing .v-char:nth-child(9) { animation-delay: .32s; animation-duration: .4s; }
-    .is-playing .v-char:nth-child(10) { animation-delay: .08s; animation-duration: .5s; }
-    .is-playing .v-char:nth-child(11) { animation-delay: .18s; animation-duration: .35s; }
-    .is-playing .v-char:nth-child(12) { animation-delay: .28s; animation-duration: .45s; }
-    .is-playing .v-char:nth-child(13) { animation-delay: .38s; animation-duration: .55s; }
-    .is-playing .v-char:nth-child(14) { animation-delay: .15s; animation-duration: .4s; }
-    .is-playing .v-char:nth-child(15) { animation-delay: .25s; animation-duration: .5s; }
-    .is-playing .v-char:nth-child(16) { animation-delay: .35s; animation-duration: .35s; }
-    .is-playing .v-char:nth-child(17) { animation-delay: .45s; animation-duration: .45s; }
-    .is-playing .v-char:nth-child(18) { animation-delay: .55s; animation-duration: .55s; }
-    .is-playing .v-char:nth-child(19) { animation-delay: .65s; animation-duration: .4s; }
-    
-    @keyframes bounceVis { 0% { transform: translateY(0); color: var(--muted); } 100% { transform: translateY(-6px); color: var(--accent); } }
 
-    .music-options { position: absolute; top: calc(100% + 8px); right: 0; width: 160px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,0.08); opacity: 0; visibility: hidden; transform: translateY(-4px); transition: all .2s ease; z-index: 100; }
-    .music-options.is-open { opacity: 1; visibility: visible; transform: none; }
-    .vol-control { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-    .vol-control svg { width: 14px; height: 14px; color: var(--muted); }
-    .vol-control input[type="range"] { flex: 1; appearance: none; height: 3px; background: var(--line); border-radius: 2px; outline: none; }
-    .vol-control input[type="range"]::-webkit-slider-thumb { appearance: none; width: 12px; height: 12px; border-radius: 50%; background: var(--ink); cursor: pointer; }
-    .yt-link { display: block; text-align: center; font-family: ui-monospace, SFMono-Regular, monospace; font-size: 10px; color: var(--muted); text-decoration: none; padding-top: 10px; border-top: 1px solid var(--line); transition: color .2s; }
-    .yt-link:hover { color: var(--ink); }
+    .vol-control {
+      position: absolute;
+      bottom: -40px; right: 10px;
+      background: #ffffff; border: 1px solid var(--line);
+      padding: 8px 12px; border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      display: flex; align-items: center; gap: 8px;
+      opacity: 0; visibility: hidden; transform: translateY(-5px);
+      transition: all .2s;
+      z-index: 10;
+    }
+    .music-player:hover .vol-control { opacity: 1; visibility: visible; transform: translateY(0); }
+    .vol-control input[type="range"] { width: 60px; appearance: none; height: 3px; background: var(--line); border-radius: 2px; outline: none; }
+    .vol-control input[type="range"]::-webkit-slider-thumb { appearance: none; width: 10px; height: 10px; border-radius: 50%; background: var(--ink); cursor: pointer; }
 
     @media (max-width: 900px) {
+      .music-player { min-width: auto; padding: 4px; gap: 8px; margin-right: 8px; }
       .music-info { display: none; }
-      .music-player { padding: 4px; gap: 4px; margin-right: 8px; }
+      .music-art { width: 32px; height: 32px; }
+      .music-btn { width: 36px; height: 36px; }
+      .music-btn svg { width: 14px; height: 14px; }
+      .visualizer { margin-right: 4px; height: 16px; gap: 1.5px; }
+      .v-bar { width: 2px; }
+      @keyframes bounceBar {
+        0% { height: 4px; }
+        100% { height: 16px; }
+      }
     }
 
     section { padding: 64px 0; }
@@ -614,25 +642,27 @@
 
     <!-- ADVANCED MUSIC PLAYER -->
     <div class="music-player" id="musicPlayer">
+      <img src="https://i.ytimg.com/vi/9dm6HKE_7KI/maxresdefault.jpg" class="music-art" id="musicArt" alt="Album Art" />
+      
+      <div class="music-info">
+        <div class="music-title" id="musicTitle">Loading...</div>
+        <div class="music-artist" id="musicArtist">YouTube</div>
+      </div>
+
+      <div class="visualizer" id="visualizer">
+        <div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div>
+        <div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div>
+        <div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div>
+      </div>
+
       <button class="music-btn" id="musicPlayBtn" aria-label="Play">
         <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
         <svg id="pauseIcon" class="pause-icon" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
       </button>
-      <div class="music-info">
-        <div class="music-title" id="musicTitle">Track Playing</div>
-        <div class="visualizer" id="visualizer">
-          <span class="v-char">/</span><span class="v-char">/</span><span class="v-char">/</span><span class="v-char">/</span><span class="v-char">_</span><span class="v-char"> </span><span class="v-char">_</span><span class="v-char">_</span><span class="v-char">_</span><span class="v-char">/</span><span class="v-char">/</span><span class="v-char">/</span><span class="v-char">/</span><span class="v-char">/</span><span class="v-char">_</span><span class="v-char">/</span><span class="v-char">/</span><span class="v-char">_</span><span class="v-char">/</span>
-        </div>
-      </div>
-      <button class="music-btn options-btn" id="musicOptionsBtn" aria-label="Options" style="background:transparent; box-shadow:none;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
-      </button>
-      <div class="music-options" id="musicOptions">
-        <div class="vol-control">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-          <input type="range" id="volSlider" min="0" max="100" value="50" />
-        </div>
-        <a href="https://music.youtube.com/watch?v=9dm6HKE_7KI" target="_blank" class="yt-link">Open in YT Music ↗</a>
+
+      <div class="vol-control">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:14px;height:14px;color:var(--muted)"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+        <input type="range" id="volSlider" min="0" max="100" value="50" />
       </div>
     </div>
 
@@ -1214,27 +1244,38 @@
   fetchWeather();
 
   /* MUSIC PLAYER SCRIPT */
-  let ytPlayer;
+  const ytVideoId = "9dm6HKE_7KI";
+  const musicPlayer = document.getElementById("musicPlayer");
   const playBtn = document.getElementById("musicPlayBtn");
   const playIcon = document.getElementById("playIcon");
   const pauseIcon = document.getElementById("pauseIcon");
-  const vis = document.getElementById("visualizer");
-  const optBtn = document.getElementById("musicOptionsBtn");
-  const optMenu = document.getElementById("musicOptions");
   const volSlider = document.getElementById("volSlider");
+  let ytPlayer;
+
+  fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${ytVideoId}&format=json`)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("musicTitle").textContent = data.title;
+      document.getElementById("musicArtist").textContent = data.author_name;
+      document.getElementById("musicArt").src = data.thumbnail_url;
+    })
+    .catch(() => {
+      document.getElementById("musicTitle").textContent = "Track Playing";
+      document.getElementById("musicArtist").textContent = "YouTube";
+    });
 
   window.onYouTubeIframeAPIReady = function() {
     ytPlayer = new YT.Player('yt-player', {
       height: '0',
       width: '0',
-      videoId: '9dm6HKE_7KI',
+      videoId: ytVideoId,
       playerVars: {
         'autoplay': 0,
         'controls': 0,
         'disablekb': 1,
         'fs': 0,
         'loop': 1,
-        'playlist': '9dm6HKE_7KI',
+        'playlist': ytVideoId,
         'playsinline': 1
       },
       events: {
@@ -1245,11 +1286,11 @@
           if (event.data === YT.PlayerState.PLAYING) {
             playIcon.style.display = 'none';
             pauseIcon.style.display = 'block';
-            vis.classList.add('is-playing');
+            musicPlayer.classList.add('playing');
           } else {
             playIcon.style.display = 'block';
             pauseIcon.style.display = 'none';
-            vis.classList.remove('is-playing');
+            musicPlayer.classList.remove('playing');
           }
         }
       }
@@ -1263,17 +1304,6 @@
       ytPlayer.pauseVideo();
     } else {
       ytPlayer.playVideo();
-    }
-  });
-
-  optBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    optMenu.classList.toggle("is-open");
-  });
-
-  document.addEventListener("click", (e) => {
-    if (!optMenu.contains(e.target) && e.target !== optBtn) {
-      optMenu.classList.remove("is-open");
     }
   });
 
