@@ -27,6 +27,7 @@
       --muted: #6b6b76;
       --line: #ebebf0;
       --accent: #e11d48;
+      --spotify: #1DB954;
       --max: 1400px;
       --online: #23a55a;
       --idle: #f0b232;
@@ -83,7 +84,7 @@
     .cursor-gif.hovering { width: 54px; height: 54px; }
 
     @media (pointer: fine) {
-      body, a, button, .chip, .project, .social, .avatar-wrap, .github-widget, .music-player { cursor: none !important; }
+      body, a, button, .chip, .project, .social, .avatar-wrap, .github-widget, .music-player, .tech-item { cursor: none !important; }
     }
     @media (max-width: 900px) {
       .cursor-gif { display: none !important; }
@@ -188,6 +189,9 @@
     .music-player.playing .v-bar:nth-child(11) { animation-delay: 0.1s; animation-duration: 0.8s; }
     .music-player.playing .v-bar:nth-child(12) { animation-delay: 0.3s; animation-duration: 0.6s; }
 
+    .spotify-player { display: none; border-color: rgba(29, 185, 84, 0.3); }
+    .spotify-player .v-bar { background: var(--spotify); }
+
     @keyframes bounceBar {
       0% { height: 4px; }
       100% { height: 20px; }
@@ -226,13 +230,29 @@
     .vol-control input[type="range"]::-webkit-slider-thumb { appearance: none; width: 10px; height: 10px; border-radius: 50%; background: var(--ink); cursor: pointer; }
 
     @media (max-width: 900px) {
-      .music-player { min-width: auto; padding: 4px; gap: 8px; margin-right: 8px; }
+      .nav-links { display: none; }
+      .brand span { display: none; }
+      
+      .nav-center-gif { 
+        display: block !important; 
+        height: 32px; 
+        margin: 0 auto; 
+      }
+
+      .music-player { 
+        min-width: auto; 
+        padding: 4px; 
+        gap: 6px; 
+        margin-right: 0; 
+      }
       .music-info { display: none; }
       .music-art { width: 32px; height: 32px; }
       .music-btn { width: 36px; height: 36px; }
       .music-btn svg { width: 14px; height: 14px; }
       .visualizer { margin-right: 4px; height: 16px; gap: 1.5px; }
       .v-bar { width: 2px; }
+      .vol-control { display: none; }
+      
       @keyframes bounceBar {
         0% { height: 4px; }
         100% { height: 16px; }
@@ -261,12 +281,14 @@
       letter-spacing: -0.045em; font-weight: 700; min-height: 1.05em;
       animation: float 6s ease-in-out infinite;
       color: var(--ink) !important;
+      cursor: default;
     }
     
     .status-line {
       display: flex; align-items: center; gap: 10px;
       font-size: 1.1rem; color: var(--muted) !important; font-weight: 500;
       animation: float 6s ease-in-out infinite 0.5s;
+      min-height: 1.6em;
     }
     .status-dot {
       width: 10px; height: 10px; border-radius: 50%;
@@ -387,21 +409,29 @@
     .feels-like-text { font-size: 0.9rem; color: var(--muted) !important; margin-top: 2px; }
     .feels-like-text span { color: var(--ink) !important; }
 
-    .marquee-section {
-      padding: 0; border-top: 1px solid var(--line) !important; border-bottom: 1px solid var(--line) !important;
-      background: rgba(255,255,255,0.8) !important; overflow: hidden; display: flex; align-items: center;
-      height: 80px; margin-bottom: 32px;
+    .tech-section { padding: 40px 0 64px 0; text-align: center; }
+    .tech-grid { 
+      display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; max-width: 900px; margin: 0 auto;
     }
-    .marquee-content {
-      display: flex; gap: 40px; white-space: nowrap; animation: scroll 25s linear infinite;
+    .tech-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 24px; border: 1px solid var(--line); border-radius: 20px;
+      background: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      font-weight: 600; font-size: 1.1rem; color: var(--ink);
+      transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.3s, border-color 0.3s;
+      animation: float 6s ease-in-out infinite;
     }
-    .marquee-content:hover { animation-play-state: paused; }
-    .marquee-item {
-      display: flex; align-items: center; gap: 12px; font-size: 1.3rem; font-weight: 600;
-      color: var(--muted) !important; text-transform: uppercase; letter-spacing: 0.1em;
+    .tech-item:nth-child(2) { animation-delay: 0.5s; }
+    .tech-item:nth-child(3) { animation-delay: 1s; }
+    .tech-item:nth-child(4) { animation-delay: 1.5s; }
+    .tech-item:nth-child(5) { animation-delay: 2s; }
+    .tech-item:hover {
+      animation-play-state: paused;
+      transform: translateY(-8px) scale(1.05) rotate(2deg);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+      border-color: var(--accent);
     }
-    .marquee-item img { width: 32px; height: 32px; }
-    .marquee-item .sep { color: var(--accent) !important; margin-left: 40px; }
+    .tech-item img { width: 28px; height: 28px; }
 
     .github-widget {
       background: #ffffff !important;
@@ -544,10 +574,6 @@
       70% { box-shadow: 0 0 0 6px rgba(35, 165, 90, 0); }
       100% { box-shadow: 0 0 0 0 rgba(35, 165, 90, 0); }
     }
-    @keyframes scroll {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
     @keyframes drift {
       0% { transform: translate(0, 0) scale(1); }
       100% { transform: translate(50px, 50px) scale(1.1); }
@@ -560,24 +586,10 @@
     .reveal { opacity: 0; transform: translateY(30px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1); }
     .reveal.show { opacity: 1; transform: translateY(0); }
 
-    @media (max-width: 900px) {
-      .hero-grid { grid-template-columns: 1fr; gap: 32px; }
-      .split { grid-template-columns: 1fr; gap: 32px; }
-      .split .media { order: -1; }
-      .spotify-widget { bottom: 16px; right: 16px; padding: 8px 12px; gap: 12px; }
-      .spotify-art { width: 36px; height: 36px; }
-      .spotify-info { max-width: 100px; }
-      .spotify-song { font-size: 12px; }
-      .spotify-artist { font-size: 10px; }
-    }
-    
     @media (max-width: 768px) {
       .wrap { width: calc(100% - 16px); }
       section { padding: 40px 0; }
       .projects-grid { grid-template-columns: 1fr; gap: 40px; }
-      .brand span { display: none; }
-      .nav-center-gif { display: none; }
-      .nav-links a { font-size: 12px; padding: 4px 8px; }
       
       .weather-widget { 
         padding: 16px 12px; 
@@ -604,10 +616,11 @@
       .socials { gap: 16px; flex-direction: row; flex-wrap: wrap; }
       .social { font-size: 0.9rem; gap: 8px; }
       .social svg { width: 20px; height: 20px; }
-      .marquee-item { font-size: 1rem; gap: 8px; }
-      .marquee-item img { width: 24px; height: 24px; }
       
       .github-widget { padding: 24px 16px; }
+      .tech-grid { gap: 12px; }
+      .tech-item { padding: 12px 16px; font-size: 0.95rem; }
+      .tech-item img { width: 24px; height: 24px; }
     }
     
     @media (prefers-reduced-motion: reduce) {
@@ -640,9 +653,8 @@
     
     <img src="https://i.ibb.co/HDrh4BVk/d2e3f3be4087072eb36f6678c83db41a-1.gif" class="nav-center-gif" alt="" />
 
-    <!-- ADVANCED MUSIC PLAYER -->
     <div class="music-player" id="musicPlayer">
-      <img src="https://i.ytimg.com/vi/9dm6HKE_7KI/maxresdefault.jpg" class="music-art" id="musicArt" alt="Album Art" />
+      <img src="https://i.ytimg.com/vi/w3LGyvzv7yg/maxresdefault.jpg" class="music-art" id="musicArt" alt="Album Art" />
       
       <div class="music-info">
         <div class="music-title" id="musicTitle">Loading...</div>
@@ -666,6 +678,19 @@
       </div>
     </div>
 
+    <a href="#" class="music-player spotify-player" id="spotify-player-top" target="_blank" rel="noopener">
+      <img src="" class="music-art" id="spotify-top-art" alt="Album Art" />
+      <div class="music-info">
+        <div class="music-title" id="spotify-top-song">Song</div>
+        <div class="music-artist" id="spotify-top-artist">Artist</div>
+      </div>
+      <div class="visualizer spotify-vis">
+        <div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div>
+        <div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div>
+        <div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div>
+      </div>
+    </a>
+
     <nav class="nav-links" aria-label="Primary">
       <a href="#stack">Stack</a>
       <a href="#work">Work</a>
@@ -683,7 +708,7 @@
         
         <div class="status-line reveal">
           <span class="status-dot"></span>
-          Available for work
+          <span id="typing-text"></span>
         </div>
         
         <a href="#stack" class="scroll-indicator reveal" aria-label="Scroll down">
@@ -738,60 +763,31 @@
     </div>
   </div>
 
-  <div class="marquee-section" id="stack">
-    <div class="marquee-content">
-      <div class="marquee-item">
+  <section id="stack" class="wrap tech-section">
+    <h2>Stack</h2>
+    <div class="tech-grid reveal">
+      <div class="tech-item">
         <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="" />
         <span>Python</span>
-        <span class="sep">✦</span>
       </div>
-      <div class="marquee-item">
+      <div class="tech-item">
         <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="" />
         <span>JavaScript</span>
-        <span class="sep">✦</span>
       </div>
-      <div class="marquee-item">
+      <div class="tech-item">
         <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg" alt="" />
         <span>Golang</span>
-        <span class="sep">✦</span>
       </div>
-      <div class="marquee-item">
+      <div class="tech-item">
         <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="" />
         <span>React</span>
-        <span class="sep">✦</span>
       </div>
-      <div class="marquee-item">
+      <div class="tech-item">
         <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg" alt="" />
         <span>Kotlin</span>
-        <span class="sep">✦</span>
-      </div>
-      <div class="marquee-item">
-        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="" />
-        <span>Python</span>
-        <span class="sep">✦</span>
-      </div>
-      <div class="marquee-item">
-        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="" />
-        <span>JavaScript</span>
-        <span class="sep">✦</span>
-      </div>
-      <div class="marquee-item">
-        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg" alt="" />
-        <span>Golang</span>
-        <span class="sep">✦</span>
-      </div>
-      <div class="marquee-item">
-        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="" />
-        <span>React</span>
-        <span class="sep">✦</span>
-      </div>
-      <div class="marquee-item">
-        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg" alt="" />
-        <span>Kotlin</span>
-        <span class="sep">✦</span>
       </div>
     </div>
-  </div>
+  </section>
 
   <section id="github-stats" class="wrap">
     <h2>GitHub Activity</h2>
@@ -947,7 +943,7 @@
     cursorGif.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
   });
 
-  document.querySelectorAll("a, button, .chip, .project, .social, .avatar-wrap, .github-widget, .music-player").forEach(el => {
+  document.querySelectorAll("a, button, .chip, .project, .social, .avatar-wrap, .github-widget, .music-player, .tech-item").forEach(el => {
     el.addEventListener("mouseenter", () => cursorGif.classList.add("hovering"));
     el.addEventListener("mouseleave", () => cursorGif.classList.remove("hovering"));
   });
@@ -989,6 +985,56 @@
 
   document.getElementById("year").textContent = new Date().getFullYear();
 
+  /* GLITCH EFFECT */
+  const heroName = document.getElementById("hero-name");
+  const originalText = heroName.innerText;
+  const chars = "!<>-_\\/[]{}—=+*^?#________";
+  let glitchInterval;
+
+  function startGlitch() {
+    let iterations = 0;
+    clearInterval(glitchInterval);
+    glitchInterval = setInterval(() => {
+      heroName.innerText = originalText.split("").map((letter, index) => {
+        if (index < iterations) return originalText[index];
+        return chars[Math.floor(Math.random() * chars.length)];
+      }).join("");
+      
+      if (iterations >= originalText.length) {
+        clearInterval(glitchInterval);
+        heroName.innerText = originalText;
+      }
+      iterations += 1 / 3;
+    }, 30);
+  }
+
+  heroName.addEventListener("mouseenter", startGlitch);
+  setTimeout(startGlitch, 1000);
+
+  /* TYPING EFFECT */
+  const typingText = document.getElementById("typing-text");
+  const textToType = "Available for work";
+  let charIndex = 0;
+  let typingStarted = false;
+
+  function typeText() {
+    if (charIndex < textToType.length) {
+      typingText.textContent += textToType.charAt(charIndex);
+      charIndex++;
+      setTimeout(typeText, 80);
+    }
+  }
+
+  const statusLine = document.querySelector(".status-line");
+  const typingObserver = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && !typingStarted) {
+      typingStarted = true;
+      setTimeout(typeText, 500);
+    }
+  }, { threshold: 0.5 });
+  typingObserver.observe(statusLine);
+
+  /* LANYARD + MUSIC PLAYER */
   const els = {
     avatar: document.getElementById("avatar"),
     username: document.getElementById("username"),
@@ -1003,6 +1049,11 @@
     spotifyArt: document.getElementById("spotify-art"),
     spotifySong: document.getElementById("spotify-song"),
     spotifyArtist: document.getElementById("spotify-artist"),
+    musicPlayer: document.getElementById("musicPlayer"),
+    spotifyPlayerTop: document.getElementById("spotify-player-top"),
+    spotifyTopArt: document.getElementById("spotify-top-art"),
+    spotifyTopSong: document.getElementById("spotify-top-song"),
+    spotifyTopArtist: document.getElementById("spotify-top-artist"),
   };
 
   const statusColor = { online: "#23a55a", idle: "#f0b232", dnd: "#f23f43", offline: "#80848e" };
@@ -1069,12 +1120,28 @@
     }
 
     if (p.listening_to_spotify && p.spotify) {
+      // Show Spotify in top bar
+      els.musicPlayer.style.display = "none";
+      els.spotifyPlayerTop.style.display = "flex";
+      els.spotifyPlayerTop.classList.add("playing");
+      els.spotifyPlayerTop.href = `https://open.spotify.com/track/${p.spotify.track_id}`;
+      els.spotifyTopArt.src = p.spotify.album_art_url;
+      els.spotifyTopSong.textContent = p.spotify.song;
+      els.spotifyTopArtist.textContent = p.spotify.artist;
+
+      // Show bottom widget
       els.spotifyWidget.classList.add("active");
       els.spotifyArt.src = p.spotify.album_art_url;
       els.spotifySong.textContent = p.spotify.song;
       els.spotifyArtist.textContent = p.spotify.artist;
       els.spotifyWidget.href = `https://open.spotify.com/track/${p.spotify.track_id}`;
     } else {
+      // Show YouTube in top bar
+      els.musicPlayer.style.display = "flex";
+      els.spotifyPlayerTop.style.display = "none";
+      els.spotifyPlayerTop.classList.remove("playing");
+
+      // Hide bottom widget
       els.spotifyWidget.classList.remove("active");
     }
   }
@@ -1120,6 +1187,7 @@
   }
   connect();
 
+  /* WEATHER SCRIPT */
   let currentUnit = 'c';
   let weatherData = null;
 
@@ -1243,9 +1311,8 @@
   setInterval(updateClock, 1000);
   fetchWeather();
 
-  /* MUSIC PLAYER SCRIPT */
-  const ytVideoId = "9dm6HKE_7KI";
-  const musicPlayer = document.getElementById("musicPlayer");
+  /* YOUTUBE PLAYER SCRIPT */
+  const ytVideoId = "w3LGyvzv7yg";
   const playBtn = document.getElementById("musicPlayBtn");
   const playIcon = document.getElementById("playIcon");
   const pauseIcon = document.getElementById("pauseIcon");
@@ -1286,11 +1353,11 @@
           if (event.data === YT.PlayerState.PLAYING) {
             playIcon.style.display = 'none';
             pauseIcon.style.display = 'block';
-            musicPlayer.classList.add('playing');
+            els.musicPlayer.classList.add('playing');
           } else {
             playIcon.style.display = 'block';
             pauseIcon.style.display = 'none';
-            musicPlayer.classList.remove('playing');
+            els.musicPlayer.classList.remove('playing');
           }
         }
       }
