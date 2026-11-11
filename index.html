@@ -3,1383 +3,997 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="color-scheme" content="only light" />
-  <meta name="supported-color-schemes" content="light" />
+  <meta name="color-scheme" content="dark" />
   <meta name="description" content="nyx's portfolio!" />
-  <meta name="theme-color" content="#ffffff" />
+  <meta name="theme-color" content="#000000" />
   <title>nyx.</title>
 
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="nyx's portfolio!" />
-  <meta property="og:description" content="nyx's portfolio!" />
-  <meta property="og:image" content="https://i.ibb.co/3mYnc3jF/ezgif-25c9bb9cd75da855-gif.gif" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="nyx's portfolio!" />
-  <meta name="twitter:description" content="nyx's portfolio!" />
-  <meta name="twitter:image" content="https://i.ibb.co/3mYnc3jF/ezgif-25c9bb9cd75da855-gif.gif" />
-
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23ffffff'/%3E%3Crect x='1' y='1' width='62' height='62' rx='15' fill='none' stroke='%23ebebf0'/%3E%3Ccircle cx='32' cy='32' r='9' fill='%23e11d48'/%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='32' fill='%23000000'/%3E%3Ccircle cx='32' cy='32' r='12' fill='%23ffffff'/%3E%3C/svg%3E" />
 
   <style>
     :root {
-      color-scheme: only light;
-      --ink: #0f0f12;
-      --muted: #6b6b76;
-      --line: #ebebf0;
-      --accent: #e11d48;
-      --spotify: #1DB954;
-      --max: 1400px;
-      --online: #23a55a;
-      --idle: #f0b232;
-      --dnd: #f23f43;
-      --offline: #80848e;
-    }
-    
-    *, *::before, *::after { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    
-    html, body {
-      background-color: #ffffff !important;
-      color: var(--ink) !important;
-      margin: 0;
-      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      line-height: 1.55;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
+      color-scheme: dark;
+      --text: #ffffff;
+      --muted: #a1a1aa;
+      --glass-bg: rgba(15, 15, 15, 0.45);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --glass-hover: rgba(255, 255, 255, 0.1);
     }
 
-    @media (prefers-color-scheme: dark) {
-      html, body { background-color: #ffffff !important; color: #0f0f12 !important; }
-      .weather-widget { background-color: #ffffff !important; border-color: #ebebf0 !important; }
-      .unit-toggle { background-color: #f7f7f8 !important; }
-      .unit-btn.active { background-color: #ffffff !important; color: #0f0f12 !important; }
-      .spotify-widget { background-color: #ffffff !important; border-color: #ebebf0 !important; }
-      .github-widget { background-color: #ffffff !important; border-color: #ebebf0 !important; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.5;
+      min-height: 100vh;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow-x: hidden;
+      background-color: #000;
+    }
+
+    .cursor-dot, .cursor-outline {
+      position: fixed;
+      top: 0; left: 0;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .cursor-dot {
+      width: 6px;
+      height: 6px;
+      background-color: #fff;
+    }
+
+    .cursor-outline {
+      width: 36px;
+      height: 36px;
+      border: 1.5px solid rgba(255, 255, 255, 0.4);
+      transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s;
+    }
+
+    .cursor-outline.hovering {
+      width: 50px;
+      height: 50px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(2px);
+    }
+
+    @media (pointer: coarse) {
+      .cursor-dot, .cursor-outline { display: none; }
+      body, a, button { cursor: auto !important; }
+    }
+
+    .bg-container {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: -3;
+    }
+    
+    .bg-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .bg-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: -1;
+    }
+
+    .bg-glow {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60vw; height: 60vh;
+      background: radial-gradient(circle, rgba(120, 119, 198, 0.15) 0%, transparent 70%);
+      filter: blur(60px);
+      z-index: -2;
+      pointer-events: none;
+      animation: pulse-glow 8s infinite alternate;
+    }
+
+    @keyframes pulse-glow {
+      0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+      100% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
     }
 
     a { color: inherit; text-decoration: none; }
     img { display: block; max-width: 100%; }
     svg { display: block; }
-    
-    .wrap { 
-      width: min(var(--max), calc(100% - 32px)); 
-      margin: 0 auto; 
-      position: relative; 
-      z-index: 2; 
-    }
 
-    :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 8px; }
-
-    .cursor-gif {
+    .top-left {
       position: fixed;
-      top: 0; left: 0;
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      object-fit: cover;
-      pointer-events: none;
-      z-index: 9999;
-      transform: translate(-50%, -50%);
-      transition: width .2s ease, height .2s ease;
-    }
-    .cursor-gif.hovering { width: 54px; height: 54px; }
-
-    @media (pointer: fine) {
-      body, a, button, .chip, .project, .social, .avatar-wrap, .github-widget, .music-player, .tech-item { cursor: none !important; }
-    }
-    @media (max-width: 900px) {
-      .cursor-gif { display: none !important; }
-      body, a, button { cursor: auto !important; }
-    }
-
-    .bg-blobs {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      pointer-events: none; z-index: 1; overflow: hidden;
-      background-color: #ffffff !important;
-    }
-    .blob {
-      position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.6;
-      animation: drift 20s infinite alternate ease-in-out;
-    }
-    .blob-1 { width: 400px; height: 400px; background: rgba(225, 29, 72, 0.05); top: -10%; left: -10%; }
-    .blob-2 { width: 500px; height: 500px; background: rgba(79, 70, 229, 0.05); bottom: -20%; right: -10%; animation-delay: -5s; }
-    .blob-3 { width: 300px; height: 300px; background: rgba(35, 165, 90, 0.05); top: 40%; left: 60%; animation-delay: -10s; }
-
-    .skip {
-      position: absolute; left: -9999px; top: 8px;
-      background: #fff; border: 1px solid var(--line);
-      padding: 8px 14px; border-radius: 10px; z-index: 100;
-    }
-    .skip:focus { left: 12px; }
-
-    .site-header {
-      position: sticky; top: 0; z-index: 50;
-      backdrop-filter: saturate(180%) blur(14px);
-      background: rgba(255,255,255,0.85) !important;
-      border-bottom: 1px solid rgba(235,235,240,0.9);
-    }
-    .nav { display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 8px; flex-wrap: nowrap; }
-    .brand { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; letter-spacing: -0.02em; transition: transform .3s; flex-shrink: 0; }
-    .brand:hover { transform: scale(1.05) rotate(-2deg); }
-    .brand .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); animation: pulse-dot 2s infinite; }
-    
-    .nav-center-gif { 
-      height: 40px; 
-      border-radius: 12px; 
-      object-fit: cover; 
-      animation: float 5s ease-in-out infinite; 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      flex-shrink: 0;
-    }
-
-    .nav-links { display: flex; align-items: center; gap: 4px; flex-wrap: nowrap; overflow-x: auto; }
-    .nav-links::-webkit-scrollbar { display: none; }
-    .nav-links a { 
-      padding: 6px 12px; border-radius: 999px; font-size: 14px; color: var(--muted); 
-      transition: background .18s, color .18s, transform .18s; white-space: nowrap;
-    }
-    .nav-links a:hover { background: #fafafb; color: var(--ink); transform: translateY(-2px); }
-
-    #yt-player { display: none; }
-
-    .music-player {
+      top: 24px;
+      left: 24px;
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 6px 6px 6px 12px;
-      border: 1px solid var(--line);
+      padding: 8px 16px;
       border-radius: 999px;
-      background: #ffffff;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-      margin-left: auto;
-      margin-right: 16px;
-      transition: all .3s ease;
-      min-width: 320px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      z-index: 100;
     }
-    .music-player:hover { border-color: #dcdce4; box-shadow: 0 6px 24px rgba(0,0,0,0.08); }
-    
-    .music-art {
-      width: 40px; height: 40px;
+
+    .top-right {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      z-index: 100;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 0.05em;
+    }
+
+    .social-btn {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
-      object-fit: cover;
-      flex-shrink: 0;
-      background: #f0f0f0;
-      animation: spin 10s linear infinite;
-      animation-play-state: paused;
-    }
-    .music-player.playing .music-art { animation-play-state: running; }
-    
-    .music-info { display: flex; flex-direction: column; justify-content: center; min-width: 0; flex: 1; gap: 2px; }
-    .music-title { font-size: 14px; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; }
-    .music-artist { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; }
-
-    .visualizer { display: flex; align-items: center; gap: 2px; height: 20px; margin-right: 8px; }
-    .v-bar { width: 3px; background: #4f46e5; border-radius: 2px; height: 4px; transition: height .2s; opacity: 0.5; }
-    .music-player.playing .v-bar { opacity: 1; animation: bounceBar 0.8s infinite alternate ease-in-out; }
-    
-    .music-player.playing .v-bar:nth-child(1) { animation-delay: 0.1s; }
-    .music-player.playing .v-bar:nth-child(2) { animation-delay: 0.3s; animation-duration: 0.6s; }
-    .music-player.playing .v-bar:nth-child(3) { animation-delay: 0.2s; animation-duration: 0.7s; }
-    .music-player.playing .v-bar:nth-child(4) { animation-delay: 0.4s; animation-duration: 0.9s; }
-    .music-player.playing .v-bar:nth-child(5) { animation-delay: 0.1s; animation-duration: 0.5s; }
-    .music-player.playing .v-bar:nth-child(6) { animation-delay: 0.3s; animation-duration: 0.8s; }
-    .music-player.playing .v-bar:nth-child(7) { animation-delay: 0.2s; animation-duration: 0.6s; }
-    .music-player.playing .v-bar:nth-child(8) { animation-delay: 0.4s; animation-duration: 0.7s; }
-    .music-player.playing .v-bar:nth-child(9) { animation-delay: 0s; animation-duration: 0.9s; }
-    .music-player.playing .v-bar:nth-child(10) { animation-delay: 0.2s; animation-duration: 0.5s; }
-    .music-player.playing .v-bar:nth-child(11) { animation-delay: 0.1s; animation-duration: 0.8s; }
-    .music-player.playing .v-bar:nth-child(12) { animation-delay: 0.3s; animation-duration: 0.6s; }
-
-    .spotify-player { display: none; border-color: rgba(29, 185, 84, 0.3); }
-    .spotify-player .v-bar { background: var(--spotify); }
-
-    @keyframes bounceBar {
-      0% { height: 4px; }
-      100% { height: 20px; }
-    }
-    @keyframes spin {
-      100% { transform: rotate(360deg); }
+      color: var(--text);
+      transition: transform 0.1s ease-out, background 0.2s ease;
     }
 
-    .music-btn {
-      display: grid; place-items: center;
-      width: 44px; height: 44px;
-      border: 0; border-radius: 50%;
-      background: var(--ink); color: #ffffff;
-      cursor: pointer; flex-shrink: 0;
-      transition: transform .2s, background .2s;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    .social-btn:hover {
+      background: var(--glass-hover);
     }
-    .music-btn:hover { transform: scale(1.05); background: #000; }
-    .music-btn:active { transform: scale(0.95); }
-    .music-btn svg { width: 18px; height: 18px; margin-left: 2px; }
-    .music-btn svg.pause-icon { margin-left: 0; }
 
-    .vol-control {
-      position: absolute;
-      bottom: -40px; right: 10px;
-      background: #ffffff; border: 1px solid var(--line);
-      padding: 8px 12px; border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      display: flex; align-items: center; gap: 8px;
-      opacity: 0; visibility: hidden; transform: translateY(-5px);
-      transition: all .2s;
+    .social-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+      pointer-events: none;
+    }
+
+    .social-btn svg.stroke-icon {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+      padding: 100px 24px 140px 24px; 
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      position: relative;
       z-index: 10;
     }
-    .music-player:hover .vol-control { opacity: 1; visibility: visible; transform: translateY(0); }
-    .vol-control input[type="range"] { width: 60px; appearance: none; height: 3px; background: var(--line); border-radius: 2px; outline: none; }
-    .vol-control input[type="range"]::-webkit-slider-thumb { appearance: none; width: 10px; height: 10px; border-radius: 50%; background: var(--ink); cursor: pointer; }
 
-    @media (max-width: 900px) {
-      .nav-links { display: none; }
-      .brand span { display: none; }
-      
-      .nav-center-gif { 
-        display: block !important; 
-        height: 32px; 
-        margin: 0 auto; 
-      }
-
-      .music-player { 
-        min-width: auto; 
-        padding: 4px; 
-        gap: 6px; 
-        margin-right: 0; 
-      }
-      .music-info { display: none; }
-      .music-art { width: 32px; height: 32px; }
-      .music-btn { width: 36px; height: 36px; }
-      .music-btn svg { width: 14px; height: 14px; }
-      .visualizer { margin-right: 4px; height: 16px; gap: 1.5px; }
-      .v-bar { width: 2px; }
-      .vol-control { display: none; }
-      
-      @keyframes bounceBar {
-        0% { height: 4px; }
-        100% { height: 16px; }
-      }
-    }
-
-    section { padding: 64px 0; }
-    
-    h2 { 
-      font-size: clamp(1.6rem, 3vw, 2.4rem); 
-      letter-spacing: -0.03em; 
-      margin: 0 0 32px 0; 
-      font-weight: 650; 
-      transition: transform .3s, color .3s;
-      display: inline-block;
-      color: var(--ink) !important;
-    }
-    h2:hover { transform: translateX(10px); color: var(--accent) !important; }
-
-    .hero { padding-top: 48px; padding-bottom: 32px; display: flex; align-items: center; }
-    .hero-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 48px; align-items: center; width: 100%; }
-    
-    .hero-copy { display: flex; flex-direction: column; justify-content: center; gap: 16px; }
-    .hero-copy h1 {
-      margin: 0; font-size: clamp(3.5rem, 7vw, 6.5rem); line-height: 1.02;
-      letter-spacing: -0.045em; font-weight: 700; min-height: 1.05em;
-      animation: float 6s ease-in-out infinite;
-      color: var(--ink) !important;
-      cursor: default;
-    }
-    
-    .status-line {
-      display: flex; align-items: center; gap: 10px;
-      font-size: 1.1rem; color: var(--muted) !important; font-weight: 500;
-      animation: float 6s ease-in-out infinite 0.5s;
-      min-height: 1.6em;
-    }
-    .status-dot {
-      width: 10px; height: 10px; border-radius: 50%;
-      background: var(--online);
-      animation: pulse-dot 2s infinite;
-    }
-
-    .scroll-indicator {
-      margin-top: 8px;
-      animation: bounce 2s infinite;
-      color: var(--muted);
-      width: 28px;
-      height: 28px;
-      transition: color .3s, transform .3s;
-    }
-    .scroll-indicator:hover { color: var(--accent); transform: scale(1.2); }
-
-    .main-card {
-      display: flex; flex-direction: column; gap: 16px;
-      animation: float 7s ease-in-out infinite 1s;
-      transition: transform .1s ease-out;
-      transform-style: preserve-3d;
-      width: 100%;
-      will-change: transform;
-    }
-    
-    .main-card .gif {
-      width: 100%; height: auto; aspect-ratio: 16/10; object-fit: cover;
-      border-radius: 20px; background: #ffffff !important; mix-blend-mode: multiply;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-      transition: transform .5s, box-shadow .5s;
-      transform: translateZ(20px);
-    }
-
-    .main-card .user { display: flex; align-items: center; gap: 14px; transform: translateZ(30px); }
-    .avatar-wrap { position: relative; flex-shrink: 0; transition: transform .3s; }
-    .avatar-wrap:hover { transform: rotate(10deg) scale(1.1); }
-    .avatar {
-      width: 64px; height: 64px; border-radius: 50%;
-      background: #ffffff !important; border: 2px solid var(--line); overflow: hidden;
-    }
-    .avatar img { width: 100%; height: 100%; object-fit: cover; }
-    .status {
-      position: absolute; bottom: 0; right: 0;
-      width: 16px; height: 16px; border-radius: 50%;
-      background: var(--offline); border: 3px solid #ffffff !important;
-      transition: background .3s;
-    }
-    .user-info { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-    .user-name { font-weight: 600; letter-spacing: -0.01em; font-size: 1.25rem; color: var(--ink) !important; }
-    .user-status { font-size: 14px; color: var(--muted) !important; text-transform: capitalize; }
-    .user-activity {
-      font-size: 14px; color: var(--muted) !important;
-      display: flex; flex-direction: column; gap: 2px; min-height: 20px;
-      transform: translateZ(20px);
-    }
-    .user-activity strong { color: var(--ink) !important; font-weight: 500; }
-    .user-activity .empty { opacity: 0.6; }
-
-    .weather-container {
-      width: 100%;
+    .profile {
       display: flex;
-      justify-content: center;
-      margin: 16px 0 32px;
+      flex-direction: column;
+      gap: 12px;
+      animation: fade-up 0.6s ease-out;
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .avatar-wrap {
       position: relative;
-      z-index: 2;
+      width: 80px;
+      height: 80px;
+      flex-shrink: 0;
     }
-    .weather-widget {
-      background: #ffffff !important;
-      border: 1px solid var(--line) !important;
-      border-radius: 24px;
-      padding: 32px 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 32px;
-      color: var(--ink) !important;
-      font-family: ui-monospace, SFMono-Regular, monospace;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.04);
+
+    .avatar {
       width: 100%;
-      animation: float 10s ease-in-out infinite;
-    }
-    .weather-col {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-    .weather-col.time-col { flex-shrink: 0; min-width: 180px; }
-    .weather-col.location-col { 
-      flex: 1; align-items: center; text-align: center;
-      border-left: 1px solid var(--line) !important; border-right: 1px solid var(--line) !important;
-      padding: 0 24px; gap: 16px;
-    }
-    .weather-col.weather-info-col {
-      flex-shrink: 0; align-items: flex-end; text-align: right; gap: 4px; min-width: 180px;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      background: #111;
     }
 
-    .time-text { font-size: 3.5rem; font-weight: 600; line-height: 1; letter-spacing: -2px; color: var(--ink) !important; }
-    .ampm-text { font-size: 2rem; font-weight: 500; margin-left: 4px; color: var(--ink) !important; }
-    .date-text { font-size: 0.9rem; color: var(--muted) !important; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 8px; font-weight: 500; }
+    .status-dot {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #80848e;
+      border: 3px solid #000;
+      transition: background 0.3s;
+    }
 
-    .location-name { font-size: 0.9rem; color: var(--muted) !important; text-transform: uppercase; letter-spacing: 3px; font-weight: 600; }
-    
-    .unit-toggle {
-      display: flex; background: #f7f7f8 !important; border-radius: 30px; padding: 4px; border: 1px solid var(--line) !important;
-    }
-    .unit-btn {
-      background: transparent; border: none; color: var(--muted) !important; padding: 6px 20px; border-radius: 30px;
-      font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
-      font-family: inherit;
-    }
-    .unit-btn.active { background: #ffffff !important; color: var(--ink) !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-
-    .weather-icon-large { width: 64px; height: 64px; margin-bottom: 4px; color: var(--ink) !important; }
-    .temp-text { font-size: 3.5rem; font-weight: 500; line-height: 1; letter-spacing: -1px; color: var(--ink) !important; }
-    .temp-unit { font-size: 2rem; vertical-align: top; color: var(--muted) !important; }
-    .condition-text { font-size: 1.1rem; color: var(--muted) !important; font-weight: 500; text-transform: capitalize; }
-    .feels-like-text { font-size: 0.9rem; color: var(--muted) !important; margin-top: 2px; }
-    .feels-like-text span { color: var(--ink) !important; }
-
-    .tech-section { padding: 40px 0 64px 0; text-align: center; }
-    .tech-grid { 
-      display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; width: 100%;
-    }
-    .tech-item {
-      display: flex; align-items: center; gap: 12px;
-      padding: 16px 24px; border: 1px solid var(--line); border-radius: 20px;
-      background: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-      font-weight: 600; font-size: 1.1rem; color: var(--ink);
-      transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.3s, border-color 0.3s;
-      animation: float 6s ease-in-out infinite;
-    }
-    .tech-item:nth-child(2) { animation-delay: 0.5s; }
-    .tech-item:nth-child(3) { animation-delay: 1s; }
-    .tech-item:nth-child(4) { animation-delay: 1.5s; }
-    .tech-item:nth-child(5) { animation-delay: 2s; }
-    .tech-item:hover {
-      animation-play-state: paused;
-      transform: translateY(-8px) scale(1.05) rotate(2deg);
-      box-shadow: 0 12px 25px rgba(0,0,0,0.08);
-      border-color: var(--accent);
-    }
-    .tech-item img { width: 28px; height: 28px; }
-
-    .github-widget {
-      background: #ffffff !important;
-      border: 1px solid var(--line) !important;
-      border-radius: 24px;
-      padding: 32px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.04);
-      animation: float 8s ease-in-out infinite;
+    .name-handle {
       display: flex;
       flex-direction: column;
-      gap: 24px;
-      width: 100%;
-    }
-    .gh-header { display: flex; align-items: center; gap: 16px; }
-    .gh-avatar { width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--line); }
-    .gh-info { display: flex; flex-direction: column; gap: 2px; }
-    .gh-name { font-size: 1.4rem; font-weight: 650; color: var(--ink) !important; }
-    .gh-link { font-size: 0.9rem; color: var(--muted) !important; transition: color 0.2s; }
-    .gh-link:hover { color: var(--accent) !important; }
-    
-    .gh-chart-container {
-      width: 100%;
-      overflow-x: auto;
-      padding: 8px 0;
-      scrollbar-width: none;
-      display: flex;
-      align-items: center;
-    }
-    .gh-chart-container::-webkit-scrollbar { display: none; }
-    .gh-chart {
-      min-width: 800px;
-      width: 100%;
-      height: auto;
-      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.02));
+      gap: 2px;
     }
 
-    .projects-grid {
-      display: grid; grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 48px;
+    h1 {
+      font-size: clamp(2rem, 5vw, 2.5rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
     }
-    .project {
-      display: flex; flex-direction: column; gap: 16px;
-      transition: transform .1s ease-out;
+
+    .handle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
+      color: var(--muted);
+      font-weight: 500;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .handle:hover {
+      color: #fff;
+    }
+
+    .handle svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    .bio {
+      font-size: clamp(1rem, 2.5vw, 1.1rem);
+      color: #d4d4d8;
+      line-height: 1.6;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+    }
+
+    .tech-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .tech-pill {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #e4e4e7;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.1s ease-out, background 0.2s;
       transform-style: preserve-3d;
-      will-change: transform;
     }
-    .project:nth-child(1) { animation: float 9s ease-in-out infinite; }
-    .project:nth-child(2) { animation: float 9s ease-in-out infinite 1.5s; }
     
-    .project .thumb {
-      margin: 0; aspect-ratio: 16/9; background: #ffffff !important;
-      display: grid; place-items: center;
-      transition: transform .3s;
-      width: 100%;
-      transform: translateZ(20px);
+    .tech-pill:hover {
+      background: var(--glass-hover);
+      border-color: rgba(255,255,255,0.25);
     }
-    .project .thumb svg { width: 100%; height: 100%; max-height: 300px; }
-    
-    .project .body { display: flex; flex-direction: column; gap: 8px; transform: translateZ(30px); }
-    .project h3 {
-      margin: 0; font-size: 1.4rem; letter-spacing: -0.02em; font-weight: 650;
-      display: flex; align-items: center; justify-content: space-between; gap: 8px;
-      color: var(--ink) !important;
+
+    .tech-pill img {
+      width: 14px;
+      height: 14px;
+      pointer-events: none;
     }
-    .project h3 svg { width: 22px; height: 22px; color: var(--muted) !important; transition: transform .3s, color .3s; }
-    .project:hover h3 svg { transform: translate(4px, -4px) scale(1.2); color: var(--accent) !important; }
-    .project p { margin: 0; font-size: 1rem; color: var(--muted) !important; line-height: 1.6; }
 
-    .split { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
-    .split .body { animation: float 7s ease-in-out infinite 0.5s; }
-    .split .media {
-      overflow: hidden; border-radius: 20px;
-      aspect-ratio: 4/3;
-      animation: float 10s ease-in-out infinite;
-      transition: transform .4s;
-      width: 100%;
+    .projects {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      animation: fade-up 0.8s ease-out;
     }
-    .split .media:hover { transform: scale(1.05) rotate(2deg); }
-    .split .media img { width: 100%; height: 100%; object-fit: cover; mix-blend-mode: multiply; background: #ffffff !important; }
-    .split .body p { margin: 0; color: var(--muted) !important; font-size: 1.15rem; line-height: 1.7; }
-    .faded { opacity: 0.45; }
 
-    .socials { display: flex; flex-wrap: wrap; gap: 40px; }
-    .social {
-      display: inline-flex; align-items: center; gap: 12px;
-      font-size: 1.15rem; font-weight: 500;
-      transition: transform .3s ease;
-      animation: float 5s ease-in-out infinite;
-      color: var(--ink) !important;
+    .project-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 20px;
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: transform 0.1s ease-out, background 0.3s, border-color 0.3s, box-shadow 0.3s;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      position: relative;
+      overflow: hidden;
+      transform-style: preserve-3d;
     }
-    .social:nth-child(1) { animation-delay: 0s; }
-    .social:nth-child(2) { animation-delay: 0.5s; }
-    .social:nth-child(3) { animation-delay: 1s; }
-    .social:hover { transform: translateY(-6px) scale(1.1); color: var(--accent) !important; }
-    .social svg { width: 28px; height: 28px; transition: transform .3s; }
-    .social:hover svg { transform: rotate(15deg) scale(1.2); }
 
-    footer { border-top: 1px solid var(--line) !important; padding: 32px 0; color: var(--muted) !important; font-size: 14px; margin-top: 32px; background: #ffffff !important; }
-    footer .wrap { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
-    .discord-status { display: inline-flex; align-items: center; gap: 8px; animation: float 4s ease-in-out infinite; }
-    .discord-status .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--offline); transition: background .3s; }
+    .project-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(
+        600px circle at var(--mouse-x, 0) var(--mouse-y, 0),
+        rgba(255, 255, 255, 0.06),
+        transparent 40%
+      );
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
 
-    .spotify-widget {
+    .project-card:hover::before {
+      opacity: 1;
+    }
+
+    .project-info, .project-actions {
+      position: relative;
+      z-index: 1;
+      transform: translateZ(30px);
+    }
+
+    .project-card:hover {
+      background: rgba(30, 30, 30, 0.55);
+      border-color: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    }
+
+    .project-info {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .project-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.1);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .project-icon svg {
+      width: 26px;
+      height: 26px;
+      stroke: var(--text);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .project-text {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .project-text h2 {
+      font-size: clamp(1.1rem, 3vw, 1.25rem);
+      font-weight: 600;
+    }
+
+    .project-text p {
+      font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .project-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text);
+      font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+      font-weight: 600;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .btn svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+      pointer-events: none;
+    }
+
+    .btn svg.stroke-icon {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+    }
+
+    .audio-visualizer {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      height: 24px;
+      z-index: 50;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .audio-visualizer.active {
+      opacity: 1;
+    }
+
+    .wave-bar {
+      width: 4px;
+      background: var(--text);
+      border-radius: 2px;
+      opacity: 0.7;
+      height: 4px;
+      animation: wave 1.2s ease-in-out infinite alternate;
+    }
+
+    .wave-bar:nth-child(even) { animation-duration: 1.5s; }
+    .wave-bar:nth-child(3n) { animation-duration: 0.9s; }
+
+    @keyframes wave {
+      0% { height: 4px; opacity: 0.3; }
+      100% { height: 20px; opacity: 1; background: #1DB954; }
+    }
+
+    .weather-widget {
       position: fixed;
       bottom: 24px;
       right: 24px;
-      background: #ffffff !important;
-      border: 1px solid var(--line) !important;
-      border-radius: 20px;
-      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      text-align: right;
+      gap: 4px;
+      z-index: 50;
+      animation: fade-in 1s ease-out;
+    }
+
+    .weather-label {
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: lowercase;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+    }
+
+    .weather-main {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .weather-icon {
+      width: clamp(32px, 8vw, 40px);
+      height: clamp(32px, 8vw, 40px);
+      color: #fbbf24;
+      filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.5));
+    }
+
+    .weather-temp-group {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0;
+    }
+
+    .weather-temp {
+      font-size: clamp(1.5rem, 5vw, 2rem);
+      font-weight: 700;
+      line-height: 1;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    }
+
+    .weather-desc {
+      font-size: clamp(0.8rem, 2.5vw, 0.95rem);
+      font-weight: 500;
+      color: #e4e4e7;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+    }
+
+    .weather-range {
+      color: var(--muted);
+      font-size: clamp(0.7rem, 2vw, 0.85rem);
+      font-weight: 500;
+      margin-top: 2px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+    }
+
+    .music-widget {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 10px 14px;
       display: none;
       align-items: center;
-      gap: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-      z-index: 100;
-      animation: float 5s ease-in-out infinite;
-      text-decoration: none;
-    }
-    .spotify-widget.active { display: flex; }
-    .spotify-art { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; }
-    .spotify-info { display: flex; flex-direction: column; max-width: 150px; }
-    .spotify-song { font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--ink) !important; }
-    .spotify-artist { font-size: 12px; color: var(--muted) !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .equalizer { display: flex; align-items: flex-end; gap: 2px; height: 16px; margin-left: 8px; }
-    .eq-bar { width: 3px; background: var(--accent); border-radius: 2px; animation: eq 1s infinite ease-in-out alternate; }
-    .eq-bar:nth-child(2) { animation-delay: 0.2s; }
-    .eq-bar:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-15px); }
-    }
-    @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-      40% { transform: translateY(-10px); }
-      60% { transform: translateY(-5px); }
-    }
-    @keyframes pulse-dot {
-      0% { box-shadow: 0 0 0 0 rgba(35, 165, 90, 0.4); }
-      70% { box-shadow: 0 0 0 6px rgba(35, 165, 90, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(35, 165, 90, 0); }
-    }
-    @keyframes drift {
-      0% { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(50px, 50px) scale(1.1); }
-    }
-    @keyframes eq {
-      0% { height: 4px; }
-      100% { height: 16px; }
+      gap: 12px;
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      z-index: 50;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      transition: transform 0.2s;
     }
 
-    .reveal { opacity: 0; transform: translateY(30px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1); }
-    .reveal.show { opacity: 1; transform: translateY(0); }
+    .music-widget:hover {
+      transform: translateY(-2px);
+      background: rgba(40, 40, 40, 0.6);
+    }
 
-    @media (max-width: 900px) {
-      .hero-grid { grid-template-columns: 1fr; gap: 32px; }
-      .split { grid-template-columns: 1fr; gap: 32px; }
-      .split .media { order: -1; }
-      .spotify-widget { bottom: 16px; right: 16px; padding: 8px 12px; gap: 12px; }
-      .spotify-art { width: 36px; height: 36px; }
-      .spotify-info { max-width: 100px; }
-      .spotify-song { font-size: 12px; }
-      .spotify-artist { font-size: 10px; }
+    .music-widget.active {
+      display: flex;
     }
-    
-    @media (max-width: 768px) {
-      .wrap { width: calc(100% - 24px); }
-      section { padding: 40px 0; }
-      .projects-grid { grid-template-columns: 1fr; gap: 40px; }
-      
-      .weather-widget { 
-        padding: 20px 16px; 
-        gap: 16px; 
-        border-radius: 16px;
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .weather-col.time-col { text-align: center; border-bottom: 1px solid var(--line); padding-bottom: 12px; }
-      .weather-col.location-col { padding: 12px 0; border-left: none; border-right: none; border-bottom: 1px solid var(--line); }
-      .weather-col.weather-info-col { align-items: center; text-align: center; }
-      
-      .time-text { font-size: 2.5rem; }
-      .ampm-text { font-size: 1.5rem; }
-      .temp-text { font-size: 2.5rem; }
-      
-      .socials { gap: 16px; flex-direction: column; }
-      .social { font-size: 1rem; gap: 8px; }
-      .social svg { width: 24px; height: 24px; }
-      
-      .github-widget { padding: 24px 16px; }
-      .tech-grid { gap: 12px; }
-      .tech-item { padding: 12px 16px; font-size: 0.95rem; }
-      .tech-item img { width: 24px; height: 24px; }
+
+    .music-art {
+      width: clamp(32px, 8vw, 40px);
+      height: clamp(32px, 8vw, 40px);
+      border-radius: 8px;
+      object-fit: cover;
     }
-    
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation: none !important; transition: none !important; }
-      .reveal { opacity: 1; transform: none; }
-      html { scroll-behavior: auto; }
+
+    .music-info {
+      display: flex;
+      flex-direction: column;
+      max-width: clamp(80px, 20vw, 130px);
+    }
+
+    .music-title {
+      font-size: clamp(0.75rem, 2.5vw, 0.85rem);
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .music-artist {
+      font-size: clamp(0.65rem, 2vw, 0.75rem);
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      z-index: 1000;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @media (max-width: 600px) {
+      .top-left { top: 16px; left: 16px; padding: 6px 12px; }
+      .top-right { top: 16px; right: 16px; padding: 8px 14px; font-size: 0.8rem; }
+      .weather-widget { right: 16px; bottom: 16px; }
+      .music-widget { left: 16px; bottom: 16px; }
+      .audio-visualizer { bottom: 24px; }
+      .container { padding-top: 90px; }
+      .project-actions { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-<div id="yt-player"></div>
+  <div class="cursor-dot" id="cursor-dot"></div>
+  <div class="cursor-outline" id="cursor-outline"></div>
 
-<img src="https://i.ibb.co/bR33QmHx/From-Klickpin-com-Stylish-nail-design-inspiration-that-make-your-next-project-look-polished-and-exp.gif" class="cursor-gif" id="custom-cursor" alt="" />
+  <div class="bg-container">
+    <img src="https://i.ibb.co/k68c9ycH/From-Klickpin-com-Bookmark-these-clever-ways-to-style-your-healthy-lunch-that-look-high-end-but-sta.gif" alt="Background" />
+  </div>
+  <div class="bg-overlay"></div>
+  <div class="bg-glow"></div>
 
-<div class="bg-blobs">
-  <div class="blob blob-1"></div>
-  <div class="blob blob-2"></div>
-  <div class="blob blob-3"></div>
-</div>
-
-<a class="skip" href="#main">Skip to content</a>
-
-<header class="site-header">
-  <div class="wrap nav">
-    <a href="#" class="brand" aria-label="nyx.">
-      <span class="dot"></span>
-      <span id="brand-name">nyx.</span>
+  <aside class="top-left" id="magnetic-sidebar">
+    <a href="https://github.com/dontcare-dev" target="_blank" rel="noopener" class="social-btn magnetic" aria-label="GitHub">
+      <svg viewBox="0 0 24 24"><path d="M12 2.8a9.2 9.2 0 0 0-2.9 17.9c.5.1.7-.2.7-.5v-1.8c-2.6.6-3.1-1.1-3.1-1.1-.4-1.1-1-1.4-1-1.4-.8-.6.1-.6.1-.6.9.1 1.4.9 1.4.9.8 1.4 2.1 1 2.6.8.1-.6.3-1 .6-1.2-2.1-.2-4.3-1.1-4.3-4.7 0-1 .4-1.9 1-2.5-.1-.2-.4-1.2.1-2.5 0 0 .8-.3 2.6 1a9 9 0 0 1 4.8 0c1.8-1.3 2.6-1 2.6-1 .5 1.3.2 2.3.1 2.5.6.6 1 1.5 1 2.5 0 3.6-2.2 4.5-4.3 4.7.3.3.6.8.6 1.7v2.5c0 .3.2.6.7.5A9.2 9.2 0 0 0 12 2.8Z"/></svg>
     </a>
+    <a href="https://instagram.com/nyxcxcxcx" target="_blank" rel="noopener" class="social-btn magnetic" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" class="stroke-icon"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.5" fill="currentColor" stroke="none"/></svg>
+    </a>
+    <a href="https://discord.com/users/1429093326505640016" target="_blank" rel="noopener" class="social-btn magnetic" aria-label="Discord">
+      <svg viewBox="0 0 24 24"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+    </a>
+  </aside>
+
+  <div class="top-right">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    <span id="live-time">--:--</span>
+  </div>
+
+  <main class="container">
     
-    <img src="https://i.ibb.co/HDrh4BVk/d2e3f3be4087072eb36f6678c83db41a-1.gif" class="nav-center-gif" alt="" />
-
-    <div class="music-player" id="musicPlayer">
-      <img src="https://i.ytimg.com/vi/w3LGyvzv7yg/maxresdefault.jpg" class="music-art" id="musicArt" alt="Album Art" />
+    <div class="profile">
+      <div class="profile-header">
+        <div class="avatar-wrap">
+          <img src="https://github.com/dontcare-dev.png" alt="nyx" class="avatar" id="discord-avatar">
+          <div class="status-dot" id="discord-status"></div>
+        </div>
+        <div class="name-handle">
+          <h1>nyx.</h1>
+          <div class="handle" id="copy-discord" title="Click to copy">
+            <svg viewBox="0 0 24 24"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+            @lumiiiiiii.rx
+          </div>
+        </div>
+      </div>
+      <p class="bio">H-h-hello i am nyx. I am a developer and I work on things ? meow~</p>
       
-      <div class="music-info">
-        <div class="music-title" id="musicTitle">Loading...</div>
-        <div class="music-artist" id="musicArtist">YouTube</div>
-      </div>
-
-      <div class="visualizer" id="visualizer">
-        <div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div>
-        <div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div>
-        <div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div>
-      </div>
-
-      <button class="music-btn" id="musicPlayBtn" aria-label="Play">
-        <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-        <svg id="pauseIcon" class="pause-icon" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-      </button>
-
-      <div class="vol-control">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:14px;height:14px;color:var(--muted)"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-        <input type="range" id="volSlider" min="0" max="100" value="50" />
+      <div class="tech-stack">
+        <div class="tech-pill tilt"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="">Python</div>
+        <div class="tech-pill tilt"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="">JavaScript</div>
+        <div class="tech-pill tilt"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg" alt="">Golang</div>
+        <div class="tech-pill tilt"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="">React</div>
+        <div class="tech-pill tilt"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg" alt="">Kotlin</div>
       </div>
     </div>
 
-    <a href="#" class="music-player spotify-player" id="spotify-player-top" target="_blank" rel="noopener">
-      <img src="" class="music-art" id="spotify-top-art" alt="Album Art" />
-      <div class="music-info">
-        <div class="music-title" id="spotify-top-song">Song</div>
-        <div class="music-artist" id="spotify-top-artist">Artist</div>
-      </div>
-      <div class="visualizer spotify-vis">
-        <div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div>
-        <div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div>
-        <div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div>
-      </div>
-    </a>
-
-    <nav class="nav-links" aria-label="Primary">
-      <a href="#stack">Stack</a>
-      <a href="#work">Work</a>
-      <a href="#about">About</a>
-      <a href="#socials">Socials</a>
-    </nav>
-  </div>
-</header>
-
-<main id="main">
-  <section class="hero wrap">
-    <div class="hero-grid">
-      <div class="hero-copy">
-        <h1 id="hero-name">nyx.</h1>
-        
-        <div class="status-line reveal">
-          <span class="status-dot"></span>
-          <span id="typing-text"></span>
-        </div>
-        
-        <a href="#stack" class="scroll-indicator reveal" aria-label="Scroll down">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 5v14M19 12l-7 7-7-7"/>
-          </svg>
-        </a>
-      </div>
-
-      <div class="main-card reveal" id="tilt-card">
-        <img class="gif" src="https://i.ibb.co/3mYnc3jF/ezgif-25c9bb9cd75da855-gif.gif" alt="" loading="lazy" />
-        <div class="user">
-          <div class="avatar-wrap">
-            <div class="avatar"><img id="avatar" alt="nyx." /></div>
-            <span class="status" id="status" title="offline"></span>
+    <div class="projects">
+      
+      <div class="project-card tilt-card">
+        <div class="project-info">
+          <div class="project-icon">
+            <svg viewBox="0 0 24 24"><path d="m4 17 6-6-6-6"/><path d="M12 19h8"/></svg>
           </div>
-          <div class="user-info">
-            <div class="user-name" id="username">nyx.</div>
-            <div class="user-status" id="status-text">offline</div>
+          <div class="project-text">
+            <h2>SDS-terminal</h2>
+            <p>An Android terminal with a local AI assistant and game booster in a single terminal. Fully open source.</p>
           </div>
         </div>
-        <div class="user-activity" id="activity">
-          <span class="empty">—</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="weather-container wrap">
-    <div class="weather-widget">
-      <div class="weather-col time-col">
-        <div class="time-text"><span id="clock-time">--:--</span><span class="ampm-text" id="clock-ampm">--</span></div>
-        <div class="date-text" id="clock-date">---, --- --</div>
-      </div>
-
-      <div class="weather-col location-col">
-        <div class="location-name">DELHI, IN</div>
-        <div class="unit-toggle">
-          <button class="unit-btn active" id="btn-c" onclick="setUnit('c')">C</button>
-          <button class="unit-btn" id="btn-f" onclick="setUnit('f')">F</button>
+        <div class="project-actions">
+          <a href="https://github.com/dontcare-dev/SDS-terminal" target="_blank" rel="noopener" class="btn">
+            <svg viewBox="0 0 24 24"><path d="M12 2.8a9.2 9.2 0 0 0-2.9 17.9c.5.1.7-.2.7-.5v-1.8c-2.6.6-3.1-1.1-3.1-1.1-.4-1.1-1-1.4-1-1.4-.8-.6.1-.6.1-.6.9.1 1.4.9 1.4.9.8 1.4 2.1 1 2.6.8.1-.6.3-1 .6-1.2-2.1-.2-4.3-1.1-4.3-4.7 0-1 .4-1.9 1-2.5-.1-.2-.4-1.2.1-2.5 0 0 .8-.3 2.6 1a9 9 0 0 1 4.8 0c1.8-1.3 2.6-1 2.6-1 .5 1.3.2 2.3.1 2.5.6.6 1 1.5 1 2.5 0 3.6-2.2 4.5-4.3 4.7.3.3.6.8.6 1.7v2.5c0 .3.2.6.7.5A9.2 9.2 0 0 0 12 2.8Z"/></svg>
+            GitHub
+          </a>
+          <a href="https://github.com/dontcare-dev/SDS-terminal/releases" target="_blank" rel="noopener" class="btn">
+            <svg class="stroke-icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download
+          </a>
         </div>
       </div>
 
-      <div class="weather-col weather-info-col">
-        <svg class="weather-icon-large" id="weather-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-        </svg>
-        <div class="temp-text"><span id="weather-temp">--</span><span class="temp-unit">°</span></div>
-        <div class="condition-text" id="weather-condition">Loading...</div>
-        <div class="feels-like-text">feels like <span id="weather-feels">--°</span></div>
+      <div class="project-card tilt-card">
+        <div class="project-info">
+          <div class="project-icon">
+            <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <div class="project-text">
+            <h2>SDS-code editor</h2>
+            <p>An open source code editor with many languages, basic but fast and reliable.</p>
+          </div>
+        </div>
+        <div class="project-actions">
+          <a href="https://dontcare-dev.github.io/SDS-code-editor-/" target="_blank" rel="noopener" class="btn">
+            <svg class="stroke-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Visit Site
+          </a>
+          <a href="https://github.com/dontcare-dev/SDS-code-editor-" target="_blank" rel="noopener" class="btn">
+            <svg viewBox="0 0 24 24"><path d="M12 2.8a9.2 9.2 0 0 0-2.9 17.9c.5.1.7-.2.7-.5v-1.8c-2.6.6-3.1-1.1-3.1-1.1-.4-1.1-1-1.4-1-1.4-.8-.6.1-.6.1-.6.9.1 1.4.9 1.4.9.8 1.4 2.1 1 2.6.8.1-.6.3-1 .6-1.2-2.1-.2-4.3-1.1-4.3-4.7 0-1 .4-1.9 1-2.5-.1-.2-.4-1.2.1-2.5 0 0 .8-.3 2.6 1a9 9 0 0 1 4.8 0c1.8-1.3 2.6-1 2.6-1 .5 1.3.2 2.3.1 2.5.6.6 1 1.5 1 2.5 0 3.6-2.2 4.5-4.3 4.7.3.3.6.8.6 1.7v2.5c0 .3.2.6.7.5A9.2 9.2 0 0 0 12 2.8Z"/></svg>
+            GitHub
+          </a>
+        </div>
       </div>
+
     </div>
+  </main>
+
+  <div class="audio-visualizer" id="visualizer">
+    <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+    <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+    <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+    <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
   </div>
 
-  <section id="stack" class="wrap tech-section">
-    <h2>Stack</h2>
-    <div class="tech-grid reveal">
-      <div class="tech-item">
-        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="" />
-        <span>Python</span>
-      </div>
-      <div class="tech-item">
-        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="" />
-        <span>JavaScript</span>
-      </div>
-      <div class="tech-item">
-        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg" alt="" />
-        <span>Golang</span>
-      </div>
-      <div class="tech-item">
-        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="" />
-        <span>React</span>
-      </div>
-      <div class="tech-item">
-        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg" alt="" />
-        <span>Kotlin</span>
+  <div class="weather-widget">
+    <div class="weather-label">my weather</div>
+    <div class="weather-main">
+      <svg class="weather-icon" id="weather-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+      </svg>
+      <div class="weather-temp-group">
+        <div class="weather-temp"><span id="weather-temp">--</span>°</div>
+        <div class="weather-desc" id="weather-condition">Clear</div>
       </div>
     </div>
-  </section>
-
-  <section id="github-stats" class="wrap">
-    <h2>GitHub Activity</h2>
-    <div class="github-widget reveal">
-      <div class="gh-header">
-        <img src="https://github.com/dontcare-dev.png" alt="dontcare-dev" class="gh-avatar">
-        <div class="gh-info">
-          <div class="gh-name">dontcare-dev</div>
-          <a href="https://github.com/dontcare-dev" class="gh-link" target="_blank" rel="noopener">View Profile ↗</a>
-        </div>
-      </div>
-      <div class="gh-chart-container">
-        <img src="https://ghchart.rshah.org/39d353/dontcare-dev" alt="GitHub Contributions" class="gh-chart" />
-      </div>
-    </div>
-  </section>
-
-  <section id="work" class="wrap">
-    <h2>Work</h2>
-    <div class="projects-grid">
-      <a class="project reveal tilt" href="https://github.com/dontcare-dev/SDS-terminal" target="_blank" rel="noopener">
-        <figure class="thumb" aria-hidden="true">
-          <svg viewBox="0 0 320 180" fill="none">
-            <rect x="40" y="26" width="240" height="128" rx="12" fill="#ffffff" stroke="#0f0f12" stroke-width="1.5"/>
-            <line x1="40" y1="50" x2="280" y2="50" stroke="#0f0f12" stroke-width="1" opacity=".28"/>
-            <circle cx="55" cy="38" r="3" fill="#0f0f12" opacity=".22"/>
-            <circle cx="67" cy="38" r="3" fill="#0f0f12" opacity=".22"/>
-            <circle cx="79" cy="38" r="3" fill="#0f0f12" opacity=".22"/>
-            <text x="58" y="88" font-family="ui-monospace,SFMono-Regular,monospace" font-size="15" fill="#0f0f12">$ sds</text>
-            <rect x="58" y="102" width="120" height="3" rx="1.5" fill="#0f0f12" opacity=".15"/>
-            <rect x="58" y="112" width="80" height="3" rx="1.5" fill="#0f0f12" opacity=".10"/>
-            <rect x="58" y="122" width="140" height="3" rx="1.5" fill="#0f0f12" opacity=".12"/>
-            <rect x="182" y="122" width="8" height="3" rx="1.5" fill="#0f0f12" opacity=".35"/>
-          </svg>
-        </figure>
-        <div class="body">
-          <h3>
-            SDS-terminal
-            <svg viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </h3>
-          <p>An Android terminal like Termux but way more advanced, with a local AI assistant ready to help you at any time and a game booster in a single terminal. The whole project is fully open source.</p>
-        </div>
-      </a>
-
-      <a class="project reveal tilt" href="https://dontcare-dev.github.io/SDS-code-editor-/" target="_blank" rel="noopener">
-        <figure class="thumb" aria-hidden="true">
-          <svg viewBox="0 0 320 180" fill="none">
-            <rect x="40" y="26" width="240" height="128" rx="12" fill="#ffffff" stroke="#0f0f12" stroke-width="1.5"/>
-            <line x1="40" y1="50" x2="280" y2="50" stroke="#0f0f12" stroke-width="1" opacity=".28"/>
-            <circle cx="55" cy="38" r="3" fill="#0f0f12" opacity=".22"/>
-            <circle cx="67" cy="38" r="3" fill="#0f0f12" opacity=".22"/>
-            <circle cx="79" cy="38" r="3" fill="#0f0f12" opacity=".22"/>
-            <text x="52" y="80" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" fill="#0f0f12" opacity=".45">1</text>
-            <rect x="70" y="72" width="52" height="8" rx="2" fill="#0f0f12" opacity=".55"/>
-            <rect x="128" y="72" width="60" height="8" rx="2" fill="#0f0f12" opacity=".18"/>
-            <text x="52" y="100" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" fill="#0f0f12" opacity=".45">2</text>
-            <rect x="70" y="92" width="90" height="8" rx="2" fill="#0f0f12" opacity=".18"/>
-            <text x="52" y="120" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" fill="#0f0f12" opacity=".45">3</text>
-            <rect x="70" y="112" width="120" height="8" rx="2" fill="#0f0f12" opacity=".14"/>
-            <text x="52" y="140" font-family="ui-monospace,SFMono-Regular,monospace" font-size="11" fill="#0f0f12" opacity=".45">4</text>
-            <rect x="70" y="132" width="70" height="8" rx="2" fill="#0f0f12" opacity=".18"/>
-          </svg>
-        </figure>
-        <div class="body">
-          <h3>
-            SDS-code editor
-            <svg viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </h3>
-          <p>An open source code editor with many languages, basic but fast and reliable.</p>
-        </div>
-      </a>
-    </div>
-  </section>
-
-  <section id="about" class="wrap">
-    <h2>About</h2>
-    <div class="split">
-      <div class="body reveal">
-        <p>H-h-hello i am nyx. I am a developer and I work on things ? <span class="faded">meow~</span></p>
-      </div>
-      <div class="media reveal">
-        <img src="https://i.ibb.co/Y4Hg19n7/ezgif-260ba96fe5cce629-gif.gif" alt="" loading="lazy" />
-      </div>
-    </div>
-  </section>
-
-  <section id="socials" class="wrap">
-    <h2>Socials</h2>
-    <div class="socials reveal">
-      <a class="social" href="https://github.com/dontcare-dev" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M12 2.8a9.2 9.2 0 0 0-2.9 17.9c.5.1.7-.2.7-.5v-1.8c-2.6.6-3.1-1.1-3.1-1.1-.4-1.1-1-1.4-1-1.4-.8-.6.1-.6.1-.6.9.1 1.4.9 1.4.9.8 1.4 2.1 1 2.6.8.1-.6.3-1 .6-1.2-2.1-.2-4.3-1.1-4.3-4.7 0-1 .4-1.9 1-2.5-.1-.2-.4-1.2.1-2.5 0 0 .8-.3 2.6 1a9 9 0 0 1 4.8 0c1.8-1.3 2.6-1 2.6-1 .5 1.3.2 2.3.1 2.5.6.6 1 1.5 1 2.5 0 3.6-2.2 4.5-4.3 4.7.3.3.6.8.6 1.7v2.5c0 .3.2.6.7.5A9.2 9.2 0 0 0 12 2.8Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
-        </svg>
-        <span>dontcare-dev</span>
-      </a>
-      <a class="social" href="https://instagram.com/nyxcxcxcx" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.6"/>
-          <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/>
-          <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/>
-        </svg>
-        <span>@nyxcxcxcx</span>
-      </a>
-      <a class="social" href="https://discord.com/users/1429093326505640016" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M8.5 6.5A14 14 0 0 1 12 6a14 14 0 0 1 3.5.5l1.2 1.3c1.5 2 2.3 4.5 2.3 7.2 0 .4-.3.8-.7 1-.9.4-1.9.7-2.9.9a.6.6 0 0 1-.6-.3l-.5-1a8 8 0 0 1-4.6 0l-.5 1a.6.6 0 0 1-.6.3c-1-.2-2-.5-2.9-.9-.4-.2-.7-.6-.7-1 0-2.7.8-5.2 2.3-7.2L8.5 6.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-          <circle cx="9.5" cy="12" r="1.2" fill="currentColor"/>
-          <circle cx="14.5" cy="12" r="1.2" fill="currentColor"/>
-        </svg>
-        <span>lumiiiiiii.rx</span>
-      </a>
-    </div>
-  </section>
-</main>
-
-<footer>
-  <div class="wrap">
-    <span class="discord-status">
-      <span class="dot" id="foot-dot"></span>
-      <span id="foot-status">offline</span>
-    </span>
-    <span>&copy; <span id="year"></span> nyx.</span>
+    <div class="weather-range">Today · <span id="weather-min">--</span>° / <span id="weather-max">--</span>°</div>
   </div>
-</footer>
 
-<a href="#" class="spotify-widget" id="spotify-widget" target="_blank" rel="noopener">
-  <img src="" class="spotify-art" id="spotify-art" alt="Album Art" />
-  <div class="spotify-info">
-    <div class="spotify-song" id="spotify-song">Song Name</div>
-    <div class="spotify-artist" id="spotify-artist">Artist</div>
-  </div>
-  <div class="equalizer">
-    <div class="eq-bar"></div>
-    <div class="eq-bar"></div>
-    <div class="eq-bar"></div>
-  </div>
-</a>
+  <a href="#" class="music-widget" id="spotify-widget" target="_blank" rel="noopener">
+    <img src="" class="music-art" id="spotify-art" alt="Album Art" />
+    <div class="music-info">
+      <div class="music-title" id="spotify-song">Song</div>
+      <div class="music-artist" id="spotify-artist">Artist</div>
+    </div>
+  </a>
 
-<script src="https://www.youtube.com/iframe_api"></script>
-<script>
-(() => {
-  "use strict";
+  <div class="toast" id="toast">Copied to clipboard!</div>
 
-  const DISCORD_ID = "1429093326505640016";
-  const FALLBACK_NAME = "nyx.";
+  <script>
+    (() => {
+      "use strict";
 
-  const cursorGif = document.getElementById("custom-cursor");
-  let mouseX = -100, mouseY = -100;
+      const cursorDot = document.getElementById('cursor-dot');
+      const cursorOutline = document.getElementById('cursor-outline');
+      let mouseX = 0, mouseY = 0;
+      let outlineX = 0, outlineY = 0;
 
-  window.addEventListener("mousemove", (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    cursorGif.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
-  });
-
-  document.querySelectorAll("a, button, .chip, .project, .social, .avatar-wrap, .github-widget, .music-player, .tech-item").forEach(el => {
-    el.addEventListener("mouseenter", () => cursorGif.classList.add("hovering"));
-    el.addEventListener("mouseleave", () => cursorGif.classList.remove("hovering"));
-  });
-
-  const tiltElements = document.querySelectorAll('.main-card, .project');
-  tiltElements.forEach(el => {
-    el.addEventListener('mousemove', (e) => {
-      const rect = el.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      const rotateX = ((y - centerY) / centerY) * -15;
-      const rotateY = ((x - centerX) / centerX) * 15;
-      el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-      el.style.animation = 'none';
-      el.style.transition = 'transform 0.1s ease-out';
-    });
-
-    el.addEventListener('mouseleave', () => {
-      el.style.transform = '';
-      el.style.animation = '';
-      el.style.transition = 'transform 0.5s ease';
-      setTimeout(() => { el.style.transition = ''; }, 500);
-    });
-  });
-
-  const revealEls = document.querySelectorAll(".reveal");
-  if ("IntersectionObserver" in window) {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) { e.target.classList.add("show"); io.unobserve(e.target); }
+      window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
       });
-    }, { threshold: 0.14, rootMargin: "0px 0px -8% 0px" });
-    revealEls.forEach((el) => io.observe(el));
-  } else {
-    revealEls.forEach((el) => el.classList.add("show"));
-  }
 
-  document.getElementById("year").textContent = new Date().getFullYear();
-
-  /* GLITCH EFFECT */
-  const heroName = document.getElementById("hero-name");
-  const originalText = heroName.innerText;
-  const chars = "!<>-_\\/[]{}—=+*^?#________";
-  let glitchInterval;
-
-  function startGlitch() {
-    let iterations = 0;
-    clearInterval(glitchInterval);
-    glitchInterval = setInterval(() => {
-      heroName.innerText = originalText.split("").map((letter, index) => {
-        if (index < iterations) return originalText[index];
-        return chars[Math.floor(Math.random() * chars.length)];
-      }).join("");
-      
-      if (iterations >= originalText.length) {
-        clearInterval(glitchInterval);
-        heroName.innerText = originalText;
+      function animateCursor() {
+        outlineX += (mouseX - outlineX) * 0.15;
+        outlineY += (mouseY - outlineY) * 0.15;
+        cursorOutline.style.transform = `translate(${outlineX}px, ${outlineY}px) translate(-50%, -50%)`;
+        requestAnimationFrame(animateCursor);
       }
-      iterations += 1 / 3;
-    }, 30);
-  }
+      animateCursor();
 
-  heroName.addEventListener("mouseenter", startGlitch);
-  setTimeout(startGlitch, 1000);
+      document.querySelectorAll('a, button, .tilt-card, .tech-pill, .handle').forEach(el => {
+        el.addEventListener('mouseenter', () => cursorOutline.classList.add('hovering'));
+        el.addEventListener('mouseleave', () => cursorOutline.classList.remove('hovering'));
+      });
 
-  /* TYPING EFFECT */
-  const typingText = document.getElementById("typing-text");
-  const textToType = "Available for work";
-  let charIndex = 0;
-  let typingStarted = false;
+      const magneticEls = document.querySelectorAll('.magnetic');
+      magneticEls.forEach(el => {
+        el.addEventListener('mousemove', (e) => {
+          const rect = el.getBoundingClientRect();
+          const x = e.clientX - rect.left - rect.width / 2;
+          const y = e.clientY - rect.top - rect.height / 2;
+          el.style.transform = `translate(${x * 0.4}px, ${y * 0.4}px) scale(1.1)`;
+        });
+        el.addEventListener('mouseleave', () => {
+          el.style.transform = `translate(0px, 0px) scale(1)`;
+        });
+      });
 
-  function typeText() {
-    if (charIndex < textToType.length) {
-      typingText.textContent += textToType.charAt(charIndex);
-      charIndex++;
-      setTimeout(typeText, 80);
-    }
-  }
+      const tiltCards = document.querySelectorAll('.tilt-card, .tilt');
+      tiltCards.forEach(el => {
+        el.addEventListener('mousemove', (e) => {
+          const rect = el.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          
+          el.style.setProperty('--mouse-x', `${x}px`);
+          el.style.setProperty('--mouse-y', `${y}px`);
 
-  const statusLine = document.querySelector(".status-line");
-  const typingObserver = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting && !typingStarted) {
-      typingStarted = true;
-      setTimeout(typeText, 500);
-    }
-  }, { threshold: 0.5 });
-  typingObserver.observe(statusLine);
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = ((y - centerY) / centerY) * -8;
+          const rotateY = ((x - centerX) / centerX) * 8;
+          el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        });
 
-  /* LANYARD + MUSIC PLAYER */
-  const els = {
-    avatar: document.getElementById("avatar"),
-    username: document.getElementById("username"),
-    status: document.getElementById("status"),
-    statusText: document.getElementById("status-text"),
-    activity: document.getElementById("activity"),
-    heroName: document.getElementById("hero-name"),
-    brandName: document.getElementById("brand-name"),
-    footDot: document.getElementById("foot-dot"),
-    footStatus: document.getElementById("foot-status"),
-    spotifyWidget: document.getElementById("spotify-widget"),
-    spotifyArt: document.getElementById("spotify-art"),
-    spotifySong: document.getElementById("spotify-song"),
-    spotifyArtist: document.getElementById("spotify-artist"),
-    musicPlayer: document.getElementById("musicPlayer"),
-    spotifyPlayerTop: document.getElementById("spotify-player-top"),
-    spotifyTopArt: document.getElementById("spotify-top-art"),
-    spotifyTopSong: document.getElementById("spotify-top-song"),
-    spotifyTopArtist: document.getElementById("spotify-top-artist"),
-  };
+        el.addEventListener('mouseleave', () => {
+          el.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+        });
+      });
 
-  const statusColor = { online: "#23a55a", idle: "#f0b232", dnd: "#f23f43", offline: "#80848e" };
+      const copyBtn = document.getElementById('copy-discord');
+      const toast = document.getElementById('toast');
+      copyBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText('lumiiiiiii.rx').then(() => {
+          toast.classList.add('show');
+          setTimeout(() => toast.classList.remove('show'), 2000);
+        });
+      });
 
-  function avatarURL(user) {
-    if (!user) return "";
-    if (user.avatar) {
-      const ext = user.avatar.startsWith("a_") ? "gif" : "png";
-      return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${ext}?size=256`;
-    }
-    try {
-      const idx = Number((BigInt(user.id) >> 22n) % 6n);
-      return `https://cdn.discordapp.com/embed/avatars/${idx}.png`;
-    } catch {
-      return `https://cdn.discordapp.com/embed/avatars/0.png`;
-    }
-  }
-
-  function displayName() {
-    return FALLBACK_NAME;
-  }
-
-  function primaryActivity(activities) {
-    if (!Array.isArray(activities)) return null;
-    return activities.find((a) => a && a.type !== 4) || null;
-  }
-
-  function render(p) {
-    const user = p.discord_user || {};
-    const status = p.discord_status || "offline";
-    const name = displayName();
-
-    els.username.textContent = name;
-    els.heroName.textContent = name;
-    els.brandName.textContent = name;
-    els.statusText.textContent = status;
-    els.footStatus.textContent = status;
-    els.status.style.background = statusColor[status] || statusColor.offline;
-    els.status.title = status;
-    els.footDot.style.background = statusColor[status] || statusColor.offline;
-
-    const url = avatarURL(user);
-    if (url) { els.avatar.src = url; els.avatar.alt = name; }
-
-    const act = primaryActivity(p.activities);
-    els.activity.innerHTML = "";
-    if (act) {
-      const line1 = document.createElement("div");
-      const strong = document.createElement("strong");
-      strong.textContent = act.name || "";
-      line1.appendChild(strong);
-      if (act.details) line1.appendChild(document.createTextNode(" · " + act.details));
-      els.activity.appendChild(line1);
-      if (act.state) {
-        const line2 = document.createElement("div");
-        line2.textContent = act.state;
-        els.activity.appendChild(line2);
+      function updateTime() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('live-time').textContent = timeString;
       }
-    } else {
-      const empty = document.createElement("span");
-      empty.className = "empty";
-      empty.textContent = "—";
-      els.activity.appendChild(empty);
-    }
+      updateTime();
+      setInterval(updateTime, 1000);
 
-    if (p.listening_to_spotify && p.spotify) {
-      els.musicPlayer.style.display = "none";
-      els.spotifyPlayerTop.style.display = "flex";
-      els.spotifyPlayerTop.classList.add("playing");
-      els.spotifyPlayerTop.href = `https://open.spotify.com/track/${p.spotify.track_id}`;
-      els.spotifyTopArt.src = p.spotify.album_art_url;
-      els.spotifyTopSong.textContent = p.spotify.song;
-      els.spotifyTopArtist.textContent = p.spotify.artist;
+      const DISCORD_ID = "1429093326505640016";
 
-      els.spotifyWidget.classList.add("active");
-      els.spotifyArt.src = p.spotify.album_art_url;
-      els.spotifySong.textContent = p.spotify.song;
-      els.spotifyArtist.textContent = p.spotify.artist;
-      els.spotifyWidget.href = `https://open.spotify.com/track/${p.spotify.track_id}`;
-    } else {
-      els.musicPlayer.style.display = "flex";
-      els.spotifyPlayerTop.style.display = "none";
-      els.spotifyPlayerTop.classList.remove("playing");
-      els.spotifyWidget.classList.remove("active");
-    }
-  }
+      const avatarImg = document.getElementById("discord-avatar");
+      const statusDot = document.getElementById("discord-status");
+      const spotifyWidget = document.getElementById("spotify-widget");
+      const spotifyArt = document.getElementById("spotify-art");
+      const spotifySong = document.getElementById("spotify-song");
+      const spotifyArtist = document.getElementById("spotify-artist");
+      const visualizer = document.getElementById("visualizer");
 
-  fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`)
-    .then((r) => r.json())
-    .then((res) => { if (res && res.success && res.data) render(res.data); })
-    .catch(() => {});
+      const statusColors = { online: "#23a55a", idle: "#f0b232", dnd: "#f23f43", offline: "#80848e" };
 
-  let ws, heartbeat;
-  function connect() {
-    try { ws = new WebSocket("wss://api.lanyard.rest/socket"); }
-    catch { return; }
-
-    ws.addEventListener("open", () => {
-      ws.send(JSON.stringify({ op: 2, d: { subscribe_to_id: DISCORD_ID } }));
-    });
-
-    ws.addEventListener("message", (ev) => {
-      let msg;
-      try { msg = JSON.parse(ev.data); } catch { return; }
-
-      if (msg.op === 1 && msg.d && msg.d.heartbeat_interval) {
-        clearInterval(heartbeat);
-        heartbeat = setInterval(() => {
-          if (ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ op: 3 }));
-        }, msg.d.heartbeat_interval);
-        return;
-      }
-
-      if (msg.op === 0) {
-        if (msg.t === "INIT_STATE") {
-          const p = msg.d && msg.d[DISCORD_ID];
-          if (p) render(p);
-        } else if (msg.t === "PRESENCE_UPDATE" && msg.d && msg.d.discord_user && msg.d.discord_user.id === DISCORD_ID) {
-          render(msg.d);
+      function avatarURL(user) {
+        if (!user) return "";
+        if (user.avatar) {
+          const ext = user.avatar.startsWith("a_") ? "gif" : "png";
+          return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${ext}?size=256`;
+        }
+        try {
+          const idx = Number((BigInt(user.id) >> 22n) % 6n);
+          return `https://cdn.discordapp.com/embed/avatars/${idx}.png`;
+        } catch {
+          return `https://cdn.discordapp.com/embed/avatars/0.png`;
         }
       }
-    });
 
-    ws.addEventListener("close", () => { clearInterval(heartbeat); setTimeout(connect, 4000); });
-    ws.addEventListener("error", () => { try { ws.close(); } catch {} });
-  }
-  connect();
+      function render(p) {
+        const user = p.discord_user || {};
+        const status = p.discord_status || "offline";
 
-  /* WEATHER SCRIPT */
-  let currentUnit = 'c';
-  let weatherData = null;
+        const url = avatarURL(user);
+        if (url) avatarImg.src = url;
+        statusDot.style.background = statusColors[status] || statusColors.offline;
 
-  const DELHI_LAT = 28.6139;
-  const DELHI_LON = 77.2090;
-
-  function updateClock() {
-    const now = new Date();
-    const options = {
-      timeZone: 'Asia/Kolkata',
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric'
-    };
-    const formatter = new Intl.DateTimeFormat('en-IN', options);
-    const parts = formatter.formatToParts(now);
-    
-    let timeVal = '', ampm = '', dateParts = [];
-    parts.forEach(p => {
-      if (p.type === 'hour' || p.type === 'minute') timeVal += p.value + (p.type === 'hour' ? ':' : '');
-      if (p.type === 'dayPeriod') ampm = p.value;
-      if (p.type === 'weekday' || p.type === 'month' || p.type === 'day') dateParts.push(p.value);
-    });
-
-    document.getElementById('clock-time').textContent = timeVal.replace(/:$/, '');
-    document.getElementById('clock-ampm').textContent = ampm;
-    
-    const dateStr = new Intl.DateTimeFormat('en-IN', { timeZone: 'Asia/Kolkata', weekday: 'short', month: 'short', day: 'numeric' }).format(now);
-    document.getElementById('clock-date').textContent = dateStr.toUpperCase();
-  }
-
-  function getWeatherIcon(code, isDay) {
-    if (code === 0) {
-      return isDay 
-        ? '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>'
-        : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
-    }
-    if (code >= 1 && code <= 3) {
-      return '<path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>';
-    }
-    if (code >= 45 && code <= 48) {
-      return '<line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>';
-    }
-    if (code >= 51 && code <= 65) {
-      return '<path d="M20 16.2A4.5 4.5 0 0 0 17.5 8h-1.8A7 7 0 1 0 4 14.9"></path><path d="M16 14v6M8 14v6M12 16v6"></path>';
-    }
-    if (code >= 71 && code <= 75) {
-      return '<path d="M20 17.58A5 5 0 0 0 18 8h-1.26A8 8 0 1 0 4 16.25"></path><path d="M8 16h.01M8 20h.01M12 18h.01M12 22h.01M16 16h.01M16 20h.01"></path>';
-    }
-    if (code >= 80 && code <= 82) {
-      return '<path d="M16 13v8M8 13v8M12 15v8M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"></path>';
-    }
-    if (code >= 95 && code <= 99) {
-      return '<path d="M19 16.9A5 5 0 0 0 18 7h-1.26a8 8 0 1 0-11.62 9"></path><path d="M13 11l-4 6h6l-4 6"></path>';
-    }
-    return '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
-  }
-
-  function updateWeatherDisplay() {
-    if (!weatherData) return;
-    const w = weatherData;
-    const temp = currentUnit === 'c' ? w.tempC : w.tempF;
-    const feels = currentUnit === 'c' ? w.feelsC : w.feelsF;
-    const unitSymbol = currentUnit === 'c' ? '°C' : '°F';
-    
-    document.getElementById('weather-temp').textContent = Math.round(temp);
-    document.getElementById('weather-feels').textContent = Math.round(feels) + unitSymbol;
-  }
-
-  window.setUnit = function(unit) {
-    currentUnit = unit;
-    document.getElementById('btn-c').classList.toggle('active', unit === 'c');
-    document.getElementById('btn-f').classList.toggle('active', unit === 'f');
-    updateWeatherDisplay();
-  };
-
-  async function fetchWeather() {
-    try {
-      const url = `https://api.open-meteo.com/v1/forecast?latitude=${DELHI_LAT}&longitude=${DELHI_LON}&current=temperature_2m,apparent_temperature,weather_code,is_day&timezone=Asia%2FKolkata`;
-      const res = await fetch(url);
-      const data = await res.json();
-      
-      if (data && data.current) {
-        weatherData = {
-          tempC: data.current.temperature_2m,
-          tempF: (data.current.temperature_2m * 9/5) + 32,
-          feelsC: data.current.apparent_temperature,
-          feelsF: (data.current.apparent_temperature * 9/5) + 32,
-          code: data.current.weather_code,
-          isDay: data.current.is_day === 1
-        };
-
-        const weatherIconSvg = document.getElementById('weather-icon');
-        weatherIconSvg.innerHTML = getWeatherIcon(weatherData.code, weatherData.isDay);
-
-        const codes = {
-          0: 'Clear sky', 1: 'Mainly clear', 2: 'Partly cloudy', 3: 'Overcast',
-          45: 'Fog', 48: 'Depositing rime fog', 51: 'Light drizzle', 53: 'Moderate drizzle', 55: 'Dense drizzle',
-          56: 'Light freezing drizzle', 57: 'Dense freezing drizzle',
-          61: 'Slight rain', 63: 'Moderate rain', 65: 'Heavy rain',
-          66: 'Light freezing rain', 67: 'Heavy freezing rain',
-          71: 'Slight snow', 73: 'Moderate snow', 75: 'Heavy snow', 77: 'Snow grains',
-          80: 'Slight rain showers', 81: 'Moderate rain showers', 82: 'Violent rain showers',
-          85: 'Slight snow showers', 86: 'Heavy snow showers',
-          95: 'Thunderstorm', 96: 'Thunderstorm with slight hail', 99: 'Thunderstorm with heavy hail'
-        };
-        document.getElementById('weather-condition').textContent = codes[weatherData.code] || 'Unknown';
-
-        updateWeatherDisplay();
+        if (p.listening_to_spotify && p.spotify) {
+          spotifyWidget.classList.add("active");
+          visualizer.classList.add("active");
+          spotifyArt.src = p.spotify.album_art_url;
+          spotifySong.textContent = p.spotify.song;
+          spotifyArtist.textContent = p.spotify.artist;
+          spotifyWidget.href = `https://open.spotify.com/track/${p.spotify.track_id}`;
+        } else {
+          spotifyWidget.classList.remove("active");
+          visualizer.classList.remove("active");
+        }
       }
-    } catch (e) {
-      console.error('Weather fetch failed', e);
-      document.getElementById('weather-condition').textContent = 'Unavailable';
-    }
-  }
 
-  updateClock();
-  setInterval(updateClock, 1000);
-  fetchWeather();
+      fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`)
+        .then((r) => r.json())
+        .then((res) => { if (res && res.success && res.data) render(res.data); })
+        .catch(() => {});
 
-  /* YOUTUBE PLAYER SCRIPT */
-  const ytVideoId = "w3LGyvzv7yg";
-  const playBtn = document.getElementById("musicPlayBtn");
-  const playIcon = document.getElementById("playIcon");
-  const pauseIcon = document.getElementById("pauseIcon");
-  const volSlider = document.getElementById("volSlider");
-  let ytPlayer;
+      let ws, heartbeat;
+      function connect() {
+        try { ws = new WebSocket("wss://api.lanyard.rest/socket"); }
+        catch { return; }
 
-  fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${ytVideoId}&format=json`)
-    .then(res => res.json())
-    .then(data => {
-      document.getElementById("musicTitle").textContent = data.title;
-      document.getElementById("musicArtist").textContent = data.author_name;
-      document.getElementById("musicArt").src = data.thumbnail_url;
-    })
-    .catch(() => {
-      document.getElementById("musicTitle").textContent = "Track Playing";
-      document.getElementById("musicArtist").textContent = "YouTube";
-    });
+        ws.addEventListener("open", () => {
+          ws.send(JSON.stringify({ op: 2, d: { subscribe_to_id: DISCORD_ID } }));
+        });
 
-  window.onYouTubeIframeAPIReady = function() {
-    ytPlayer = new YT.Player('yt-player', {
-      height: '0',
-      width: '0',
-      videoId: ytVideoId,
-      playerVars: {
-        'autoplay': 0,
-        'controls': 0,
-        'disablekb': 1,
-        'fs': 0,
-        'loop': 1,
-        'playlist': ytVideoId,
-        'playsinline': 1
-      },
-      events: {
-        'onReady': (event) => {
-          event.target.setVolume(50);
-        },
-        'onStateChange': (event) => {
-          if (event.data === YT.PlayerState.PLAYING) {
-            playIcon.style.display = 'none';
-            pauseIcon.style.display = 'block';
-            els.musicPlayer.classList.add('playing');
-          } else {
-            playIcon.style.display = 'block';
-            pauseIcon.style.display = 'none';
-            els.musicPlayer.classList.remove('playing');
+        ws.addEventListener("message", (ev) => {
+          let msg;
+          try { msg = JSON.parse(ev.data); } catch { return; }
+
+          if (msg.op === 1 && msg.d && msg.d.heartbeat_interval) {
+            clearInterval(heartbeat);
+            heartbeat = setInterval(() => {
+              if (ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ op: 3 }));
+            }, msg.d.heartbeat_interval);
+            return;
           }
+
+          if (msg.op === 0) {
+            if (msg.t === "INIT_STATE") {
+              const p = msg.d && msg.d[DISCORD_ID];
+              if (p) render(p);
+            } else if (msg.t === "PRESENCE_UPDATE" && msg.d && msg.d.discord_user && msg.d.discord_user.id === DISCORD_ID) {
+              render(msg.d);
+            }
+          }
+        });
+
+        ws.addEventListener("close", () => { clearInterval(heartbeat); setTimeout(connect, 4000); });
+        ws.addEventListener("error", () => { try { ws.close(); } catch {} });
+      }
+      connect();
+
+      const LAT = 28.6139;
+      const LON = 77.2090;
+
+      async function fetchWeather() {
+        try {
+          const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=auto`;
+          const res = await fetch(url);
+          const data = await res.json();
+          
+          if (data && data.current) {
+            document.getElementById('weather-temp').textContent = Math.round(data.current.temperature_2m);
+            document.getElementById('weather-min').textContent = Math.round(data.daily.temperature_2m_min[0]);
+            document.getElementById('weather-max').textContent = Math.round(data.daily.temperature_2m_max[0]);
+
+            const codes = {
+              0: 'Clear', 1: 'Mainly Clear', 2: 'Partly Cloudy', 3: 'Overcast',
+              45: 'Fog', 48: 'Rime Fog', 51: 'Drizzle', 53: 'Drizzle', 55: 'Drizzle',
+              61: 'Rain', 63: 'Rain', 65: 'Heavy Rain', 71: 'Snow', 73: 'Snow', 75: 'Heavy Snow',
+              80: 'Showers', 81: 'Showers', 82: 'Heavy Showers', 95: 'Thunderstorm'
+            };
+            document.getElementById('weather-condition').textContent = codes[data.current.weather_code] || 'Clear';
+            
+            if (data.current.weather_code > 3) {
+              document.getElementById('weather-icon').innerHTML = '<path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>';
+            }
+          }
+        } catch (e) {
+          console.error('Weather fetch failed', e);
+          document.getElementById('weather-condition').textContent = 'Unavailable';
         }
       }
-    });
-  };
+      fetchWeather();
 
-  playBtn.addEventListener("click", () => {
-    if (!ytPlayer) return;
-    const state = ytPlayer.getPlayerState();
-    if (state === YT.PlayerState.PLAYING) {
-      ytPlayer.pauseVideo();
-    } else {
-      ytPlayer.playVideo();
-    }
-  });
-
-  volSlider.addEventListener("input", (e) => {
-    if (ytPlayer && ytPlayer.setVolume) {
-      ytPlayer.setVolume(e.target.value);
-    }
-  });
-
-})();
-</script>
+    })();
+  </script>
 </body>
 </html>
